@@ -4,10 +4,10 @@ return [
     'class'    => 'yii\db\Connection',
     // 'dsn'      => 'mysql:host=localhost;dbname=yii2redsocial',
     // 'dsn'      => 'pgsql:host=localhost;port=5432;dbname=sgc2',
-    'dsn'      => 'mysql:host=localhost;dbname=sci',
+    'dsn'      => 'pgsql:host=localhost;port=5432;dbname=db_credencial',
 
-    'username' => 'root',
-    'password' => '1234',
+    'username' => 'gu_credencial',
+    'password' => 'temporal',
     'charset'  => 'utf8',
 
     // Schema cache options (for production environment)
