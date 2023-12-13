@@ -7,7 +7,7 @@ use webvimark\modules\UserManagement\UserManagementModule;
 
 ?>
 
-<?= dmstr\widgets\Menu2::widget(
+<?= dmstr\widgets\Menu::widget(
     [
         'options' => ['class' => 'sidebar-menu tree', 'data-widget'=> 'tree'],
         'items' => [
