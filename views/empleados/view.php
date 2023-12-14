@@ -10,7 +10,7 @@ use yii\widgets\DetailView;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
+            // 'id',
             'id_departamento',
             'id_empleado_anterior',
             'nombre',
@@ -27,10 +27,10 @@ use yii\widgets\DetailView;
             'ruta_credencial',
             'tel_emergencia',
             'estatus_registro',
-            'creado_por',
-            'fecha_creacion',
-            'modificado_por',
-            'fecha_modificacion',
+            // 'creado_por',
+            // 'fecha_creacion',
+            // 'modificado_por',
+            // 'fecha_modificacion',
         ],
     ]) ?>
 
