@@ -24,6 +24,39 @@ use webvimark\modules\UserManagement\UserManagementModule;
                     // ['label' => UserManagementModule::t('back', 'Visit log'), 'icon' => ' fa-history','l2' => '','c'=> '','url' => ['/user-management/user-visit-log/index']],
                 // ],
             ],
+            [
+                'label'   => 'Encargados',
+                'icon'    => ' fa-home',
+                'l2'      => '',
+                'c'       => '',
+                // 'visible' => Yii::$app->user->identity->superadmin,
+                'url'     => Yii::$app->homeUrl . 'encargados',
+                // 'items'   => [
+                    // ['label' => UserManagementModule::t('back', 'Visit log'), 'icon' => ' fa-history','l2' => '','c'=> '','url' => ['/user-management/user-visit-log/index']],
+                // ],
+            ],
+            [
+                'label'   => 'Departamentos',
+                'icon'    => ' fa-home',
+                'l2'      => '',
+                'c'       => '',
+                // 'visible' => Yii::$app->user->identity->superadmin,
+                'url'     => Yii::$app->homeUrl . 'departamentos',
+                // 'items'   => [
+                    // ['label' => UserManagementModule::t('back', 'Visit log'), 'icon' => ' fa-history','l2' => '','c'=> '','url' => ['/user-management/user-visit-log/index']],
+                // ],
+            ],
+            [
+                'label'   => 'Empleados',
+                'icon'    => ' fa-home',
+                'l2'      => '',
+                'c'       => '',
+                // 'visible' => Yii::$app->user->identity->superadmin,
+                'url'     => Yii::$app->homeUrl . 'empleados',
+                // 'items'   => [
+                    // ['label' => UserManagementModule::t('back', 'Visit log'), 'icon' => ' fa-history','l2' => '','c'=> '','url' => ['/user-management/user-visit-log/index']],
+                // ],
+            ],
 
             [
                 'label'   => 'Registro de visitas',
@@ -93,28 +126,7 @@ use webvimark\modules\UserManagement\UserManagementModule;
                 'c'       => '',
                 'items' => [
                     ['label' => 'Gii', 'icon' => 'file-code-o', 'url' => ['/gii'],'l2' => '','c'=> ''],
-                    ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug'],'l2' => '','c'=> ''],
-                    [
-                        'label' => 'Level One',
-                        'icon' => 'circle-o',
-                        'url' => '#',
-                        'l2'      => '',
-                        'c'       => '',
-                        'items' => [
-                            ['label' => 'Level Two', 'icon' => 'circle-o', 'url' => '#','l2' => '','c'=> ''],
-                            [
-                                'label' => 'Level Two',
-                                'icon' => 'circle-o',
-                                'url' => '#',
-                                'l2'      => '',
-                                'c'       => '',
-                                'items' => [
-                                    ['label' => 'Level Three', 'icon' => 'circle-o', 'url' => '#','l2' => '','c'=> ''],
-                                    ['label' => 'Level Three', 'icon' => 'circle-o', 'url' => '#','l2' => '','c'=> ''],
-                                ],
-                            ],
-                        ],
-                    ],
+                    ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug'],'l2' => '','c'=> ''],                    
                 ],
             ],
 

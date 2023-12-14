@@ -9,7 +9,7 @@ return [
     // 'SistemaNombre' => 'Sistema Integral de Control de Gestión',
     // 'SistemaNombre'      => 'Sistema de Punto de Venta',
     // 'SistemaNombre'      => 'Sistema de Control de Inventario Punto de Venta',
-    'SistemaNombre'      => 'Nombre del Sistema',
-    'SistemaSiglas'      => 'SIGLAS',
-    'SistemaDescripcion' => 'Descripcion',
+    'SistemaNombre'      => 'Sistema de Impresión de Credenciales',
+    'SistemaSiglas'      => 'CREDENCIAL',
+    'SistemaDescripcion' => 'Sistema que permite dar de alta responsables, departamentos y empleados de los cuales se generará credencial',
 ];
