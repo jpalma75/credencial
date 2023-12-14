@@ -18,8 +18,8 @@ class DepartamentosSearch extends Departamentos
     public function rules()
     {
         return [
-            [['id', 'id_encargado'], 'integer'],
-            [['nombre', 'cp', 'direccion', 'estatus_registro', 'creado_por', 'fecha_creacion', 'modificado_por', 'fecha_modificacion'], 'safe'],
+            [['id_encargado'], 'integer'],
+            [['nombre', 'cp', 'direccion', 'estatus_registro'], 'safe'],
         ];
     }
 
@@ -56,18 +56,18 @@ class DepartamentosSearch extends Departamentos
         }
 
         $query->andFilterWhere([
-            'id' => $this->id,
+            // 'id' => $this->id,
             'id_encargado' => $this->id_encargado,
-            'fecha_creacion' => $this->fecha_creacion,
-            'fecha_modificacion' => $this->fecha_modificacion,
+            // 'fecha_creacion' => $this->fecha_creacion,
+            // 'fecha_modificacion' => $this->fecha_modificacion,
         ]);
 
         $query->andFilterWhere(['like', 'nombre', $this->nombre])
             ->andFilterWhere(['like', 'cp', $this->cp])
-            ->andFilterWhere(['like', 'direccion', $this->direccion])
-            ->andFilterWhere(['like', 'estatus_registro', $this->estatus_registro])
-            ->andFilterWhere(['like', 'creado_por', $this->creado_por])
-            ->andFilterWhere(['like', 'modificado_por', $this->modificado_por]);
+            ->andFilterWhere(['like', 'direccion', $this->direccion]);
+            // ->andFilterWhere(['like', 'estatus_registro', $this->estatus_registro])
+            // ->andFilterWhere(['like', 'creado_por', $this->creado_por])
+            // ->andFilterWhere(['like', 'modificado_por', $this->modificado_por]);
 
         return $dataProvider;
     }

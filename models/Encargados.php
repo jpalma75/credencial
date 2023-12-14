@@ -35,9 +35,7 @@ class Encargados extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'nombre', 'cargo'], 'required'],
-            [['id'], 'default', 'value' => null],
-            [['id'], 'integer'],
+            [['nombre', 'cargo'], 'required'],
             [['fecha_creacion', 'fecha_modificacion'], 'safe'],
             [['nombre'], 'string', 'max' => 150],
             [['cargo', 'ruta_firma'], 'string', 'max' => 100],
@@ -53,15 +51,15 @@ class Encargados extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
+            // 'id' => 'ID',
             'nombre' => 'Nombre',
             'cargo' => 'Cargo',
             'ruta_firma' => 'Ruta Firma',
-            'estatus_registro' => 'Estatus Registro',
-            'creado_por' => 'Creado Por',
-            'fecha_creacion' => 'Fecha Creacion',
-            'modificado_por' => 'Modificado Por',
-            'fecha_modificacion' => 'Fecha Modificacion',
+            // 'estatus_registro' => 'Estatus Registro',
+            // 'creado_por' => 'Creado Por',
+            // 'fecha_creacion' => 'Fecha Creacion',
+            // 'modificado_por' => 'Modificado Por',
+            // 'fecha_modificacion' => 'Fecha Modificacion',
         ];
     }
 

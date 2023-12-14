@@ -37,9 +37,9 @@ class Departamentos extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'nombre', 'cp', 'direccion'], 'required'],
-            [['id', 'id_encargado'], 'default', 'value' => null],
-            [['id', 'id_encargado'], 'integer'],
+            [['nombre', 'cp', 'direccion'], 'required'],
+            [['id_encargado'], 'default', 'value' => null],
+            [['id_encargado'], 'integer'],
             [['fecha_creacion', 'fecha_modificacion'], 'safe'],
             [['nombre'], 'string', 'max' => 100],
             [['cp'], 'string', 'max' => 6],
@@ -57,16 +57,16 @@ class Departamentos extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
+            // 'id' => 'ID',
             'id_encargado' => 'Id Encargado',
             'nombre' => 'Nombre',
-            'cp' => 'Cp',
-            'direccion' => 'Direccion',
-            'estatus_registro' => 'Estatus Registro',
-            'creado_por' => 'Creado Por',
-            'fecha_creacion' => 'Fecha Creacion',
-            'modificado_por' => 'Modificado Por',
-            'fecha_modificacion' => 'Fecha Modificacion',
+            'cp' => 'C.P.',
+            'direccion' => 'Dirección',
+            // 'estatus_registro' => 'Estatus Registro',
+            // 'creado_por' => 'Creado Por',
+            // 'fecha_creacion' => 'Fecha Creacion',
+            // 'modificado_por' => 'Modificado Por',
+            // 'fecha_modificacion' => 'Fecha Modificacion',
         ];
     }
 

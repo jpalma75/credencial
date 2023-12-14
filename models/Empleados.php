@@ -49,9 +49,9 @@ class Empleados extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'id_departamento', 'nombre', 'ap_paterno', 'curp', 'num_seguro', 'categoria', 'fecha_inicio_vigencia', 'fecha_termino_vigencia'], 'required'],
-            [['id', 'id_departamento', 'id_empleado_anterior'], 'default', 'value' => null],
-            [['id', 'id_departamento', 'id_empleado_anterior'], 'integer'],
+            [['id_departamento', 'nombre', 'ap_paterno', 'curp', 'num_seguro', 'categoria', 'fecha_inicio_vigencia', 'fecha_termino_vigencia'], 'required'],
+            [['id_departamento', 'id_empleado_anterior'], 'default', 'value' => null],
+            [['id_departamento', 'id_empleado_anterior'], 'integer'],
             [['fecha_inicio_vigencia', 'fecha_termino_vigencia', 'fecha_creacion', 'fecha_modificacion'], 'safe'],
             [['nombre', 'ap_paterno', 'ap_materno', 'creado_por', 'modificado_por'], 'string', 'max' => 50],
             [['curp'], 'string', 'max' => 19],
@@ -72,27 +72,27 @@ class Empleados extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'id_departamento' => 'Id Departamento',
-            'id_empleado_anterior' => 'Id Empleado Anterior',
+            // 'id' => 'ID',
+            'id_departamento' => 'Departamento',
+            'id_empleado_anterior' => 'Empleado Anterior',
             'nombre' => 'Nombre',
-            'ap_paterno' => 'Ap Paterno',
-            'ap_materno' => 'Ap Materno',
-            'curp' => 'Curp',
+            'ap_paterno' => 'Apellido Paterno',
+            'ap_materno' => 'Apellido Materno',
+            'curp' => 'CURP',
             'tipo_sanguineo' => 'Tipo Sanguineo',
-            'num_seguro' => 'Num Seguro',
-            'categoria' => 'Categoria',
-            'fecha_inicio_vigencia' => 'Fecha Inicio Vigencia',
-            'fecha_termino_vigencia' => 'Fecha Termino Vigencia',
+            'num_seguro' => 'No. Seguro',
+            'categoria' => 'Categoría',
+            'fecha_inicio_vigencia' => 'Inicio Vigencia',
+            'fecha_termino_vigencia' => 'Termino Vigencia',
             'ruta_firma' => 'Ruta Firma',
             'ruta_foto' => 'Ruta Foto',
             'ruta_credencial' => 'Ruta Credencial',
             'tel_emergencia' => 'Tel Emergencia',
-            'estatus_registro' => 'Estatus Registro',
-            'creado_por' => 'Creado Por',
-            'fecha_creacion' => 'Fecha Creacion',
-            'modificado_por' => 'Modificado Por',
-            'fecha_modificacion' => 'Fecha Modificacion',
+            // 'estatus_registro' => 'Estatus Registro',
+            // 'creado_por' => 'Creado Por',
+            // 'fecha_creacion' => 'Fecha Creacion',
+            // 'modificado_por' => 'Modificado Por',
+            // 'fecha_modificacion' => 'Fecha Modificacion',
         ];
     }
 
