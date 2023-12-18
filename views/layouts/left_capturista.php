@@ -80,18 +80,6 @@ use yii\widgets\ActiveForm;
             ],
 
             [
-                'label'   => 'Registro de visitas',
-                'icon'    => ' fa- fa-history',
-                'l2'      => '',
-                'c'       => '',
-                // 'visible' => Yii::$app->user->identity->superadmin,
-                'url'     => ['/user-visit-log'],
-                // 'items'   => [
-                    // ['label' => UserManagementModule::t('back', 'Visit log'), 'icon' => ' fa-history','l2' => '','c'=> '','url' => ['/user-management/user-visit-log/index']],
-                // ],
-            ],           
-
-            [
                 'label'   => 'Acerca de',
                 'icon'    => ' fa-info-circle',
                 'l2'      => '',
@@ -102,42 +90,6 @@ use yii\widgets\ActiveForm;
                     // ['label' => UserManagementModule::t('back', 'Visit log'), 'icon' => ' fa-history','l2' => '','c'=> '','url' => ['/user-management/user-visit-log/index']],
                 // ],
             ],
-
-
-            // ['label' => 'Menu ', 'options' => ['class' => 'header'],'l2' => '','c'=> ''],
-            // ['label' => 'Login', 'url' => ['site/login'], 'visible' => Yii::$app->user->isGuest,'l2' => '','c'=> ''],
-            
-
-            [
-                'label'   => 'Administrador',
-                'icon'    => ' fa-expeditedssl',
-                'l2'      => '',
-                'c'       => '',
-                // 'visible' => Yii::$app->user->identity->superadmin,
-                'url'     => '',
-                'items'   => [
-                    ['label' => UserManagementModule::t('back', 'Users'), 'icon' => ' fa-users','l2' => '','c'=> '', 'url' => ['/user-management/user/index']],
-                    ['label' => UserManagementModule::t('back', 'Roles'), 'icon' => ' fa-user-secret','l2' => '','c'=> '','url' => ['/user-management/role/index']],
-                    ['label' => UserManagementModule::t('back', 'Permissions'), 'icon' => ' fa-flag','l2' => '','c'=> '', 'url' => ['/user-management/permission/index']],
-                    ['label' => UserManagementModule::t('back', 'Permission groups'), 'icon' => ' fa-flag-o','l2' => '','c'=> '','url' => ['/user-management/auth-item-group/index']],
-                    ['label' => UserManagementModule::t('back', 'Visit log'), 'icon' => ' fa-history','l2' => '','c'=> '','url' => ['/user-management/user-visit-log/index']],
-                ],
-            ],
-
-            [
-                'label' => 'Algunas herramientas',
-                'icon' => 'share',
-                'url' => '#',
-                'l2'      => '',
-                'c'       => '',
-                'items' => [
-                    ['label' => 'Gii', 'icon' => 'file-code-o', 'url' => ['/gii'],'l2' => '','c'=> ''],
-                    ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug'],'l2' => '','c'=> ''],                    
-                ],
-            ],
-
-            
-
 
         ],
     ]

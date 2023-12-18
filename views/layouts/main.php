@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+use webvimark\modules\UserManagement\models\User;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -74,8 +75,23 @@ if (Yii::$app->controller->action->id === 'login') {
             ['directoryAsset' => $directoryAsset]
         ) ?>
 
+        <!-- CONDICIONAR BOTONERA SEGUN EL ROL DEL USUARIO LOGUEADO -->
+        <?php
+            $archivo_botonera = 'left_capturista.php';
+
+            if (Yii::$app->user->identity->superadmin) {
+                $archivo_botonera = 'left_superadmin.php';
+            }elseif (User::HasRole('ROL_ADMINISTRADOR', false)) {
+                $archivo_botonera = 'left_administrador.php';
+            }elseif (User::HasRole('ROL_CAPTURA', false)) {
+                $archivo_botonera = 'left_capturista.php';
+            }else{
+                $archivo_botonera = 'left_vacio.php';
+            }
+        ?>
+        
         <?= $this->render(
-            'left.php',
+            $archivo_botonera,
             ['directoryAsset' => $directoryAsset]
         )
         ?>

@@ -1,6 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\helpers\Url;
+use webvimark\modules\UserManagement\UserManagementModule;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -22,7 +23,7 @@ use yii\helpers\Url;
 
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <!-- <img src="<?= Url::home(true)?>/img/perfil/foto.jpg" class="user-image" alt="User Image"/> -->
+                        <!-- <img src="< ?= Url::home(true)?>/img/perfil/foto.jpg" class="user-image" alt="User Image"/> -->
                         <img src="<?= Url::home(true)?>/img/perfil/foto.jpg ?>" class="user-image" alt="User Image"/>
                         
                         <span class="hidden-xs"><?= Yii::$app->user->identity->username ?></span>

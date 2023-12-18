@@ -104,7 +104,7 @@ class SiteController extends Controller
         // Yii::$app->user->logout();
         // return $this->goHome();
 
-        Yii::$app->user->logout(false);
+        Yii::$app->user->logout();
         return $this->redirect(Yii::$app->homeUrl);
     }
 

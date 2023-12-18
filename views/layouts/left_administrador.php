@@ -118,26 +118,9 @@ use yii\widgets\ActiveForm;
                 'items'   => [
                     ['label' => UserManagementModule::t('back', 'Users'), 'icon' => ' fa-users','l2' => '','c'=> '', 'url' => ['/user-management/user/index']],
                     ['label' => UserManagementModule::t('back', 'Roles'), 'icon' => ' fa-user-secret','l2' => '','c'=> '','url' => ['/user-management/role/index']],
-                    ['label' => UserManagementModule::t('back', 'Permissions'), 'icon' => ' fa-flag','l2' => '','c'=> '', 'url' => ['/user-management/permission/index']],
-                    ['label' => UserManagementModule::t('back', 'Permission groups'), 'icon' => ' fa-flag-o','l2' => '','c'=> '','url' => ['/user-management/auth-item-group/index']],
                     ['label' => UserManagementModule::t('back', 'Visit log'), 'icon' => ' fa-history','l2' => '','c'=> '','url' => ['/user-management/user-visit-log/index']],
                 ],
             ],
-
-            [
-                'label' => 'Algunas herramientas',
-                'icon' => 'share',
-                'url' => '#',
-                'l2'      => '',
-                'c'       => '',
-                'items' => [
-                    ['label' => 'Gii', 'icon' => 'file-code-o', 'url' => ['/gii'],'l2' => '','c'=> ''],
-                    ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug'],'l2' => '','c'=> ''],                    
-                ],
-            ],
-
-            
-
 
         ],
     ]
