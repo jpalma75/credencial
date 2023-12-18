@@ -21,15 +21,20 @@ class EncargadosController extends Controller
      */
     public function behaviors()
     {
+        // return [
+        //     'verbs' => [
+        //         'class' => VerbFilter::className(),
+        //         'actions' => [
+        //             'delete' => ['post'],
+        //             'bulk-delete' => ['post'],
+        //         ],
+        //     ],
+        // ];
         return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
-                    'bulk-delete' => ['post'],
-                ],
-            ],
-        ];
+        'ghost-access'=> [
+            'class' => 'webvimark\modules\UserManagement\components\GhostAccessControl',
+        ],
+    ];
     }
 
     /**
