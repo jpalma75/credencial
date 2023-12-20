@@ -17,8 +17,7 @@ class DepartamentosSearch extends Departamentos
      */
     public function rules()
     {
-        return [
-            [['id_encargado'], 'integer'],
+        return [            
             [['nombre', 'cp', 'direccion', 'estatus_registro'], 'safe'],
         ];
     }
@@ -54,13 +53,6 @@ class DepartamentosSearch extends Departamentos
             // $query->where('0=1');
             return $dataProvider;
         }
-
-        $query->andFilterWhere([
-            // 'id' => $this->id,
-            'id_encargado' => $this->id_encargado,
-            // 'fecha_creacion' => $this->fecha_creacion,
-            // 'fecha_modificacion' => $this->fecha_modificacion,
-        ]);
 
         $query->andFilterWhere(['like', 'nombre', $this->nombre])
             ->andFilterWhere(['like', 'cp', $this->cp])

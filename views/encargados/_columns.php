@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Url;
+use yii\helpers\Html;
 
 return [
     // [
@@ -27,9 +28,15 @@ return [
         'attribute'=>'ruta_firma',
     ],
     [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'estatus_registro',
+        'format'=>'html',
+        'value'=>function($data){
+            return Html::img($data->ruta_firma, ['width' => '60px']);
+        }
     ],
+    // [
+    //     'class'=>'\kartik\grid\DataColumn',
+    //     'attribute'=>'estatus_registro',
+    // ],
     // [
     //     'class'=>'\kartik\grid\DataColumn',
     //     'attribute'=>'creado_por',

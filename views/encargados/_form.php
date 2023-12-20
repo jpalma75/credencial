@@ -17,9 +17,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'cargo')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'ruta_firma')->textInput(['maxlength' => true]) ?>
+    <?= Html::img($model->ruta_firma, ['width' => '60px']) ?>
 
-    <?= $form->field($model, 'estatus_registro')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'archivo')->fileInput() ?>
+    
+    <!-- < ?= $form->field($model, 'ruta_firma')->textInput(['maxlength' => true]) ?> -->
+
+    <!-- < ?= $form->field($model, 'estatus_registro')->textInput(['maxlength' => true]) ?> -->
 
     <!-- < ?= $form->field($model, 'creado_por')->textInput(['maxlength' => true]) ?>
 
@@ -29,7 +33,6 @@ use yii\widgets\ActiveForm;
 
     < ?= $form->field($model, 'fecha_modificacion')->textInput() ?> -->
 
-  
 	<?php if (!Yii::$app->request->isAjax){ ?>
 	  	<div class="form-group">
 	        <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

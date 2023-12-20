@@ -11,11 +11,11 @@ use yii\widgets\DetailView;
         'model' => $model,
         'attributes' => [
             // 'id',
-            'id_encargado',
+            // 'id_encargado',
             'nombre',
             'cp',
             'direccion',
-            'estatus_registro',
+            // 'estatus_registro',
             // 'creado_por',
             // 'fecha_creacion',
             // 'modificado_por',

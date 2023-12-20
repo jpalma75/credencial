@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use yii\base\Model;
+use yii\web\UploadedFile;
+
 
 /**
  * This is the model class for table "encargados".
@@ -21,6 +24,9 @@ use Yii;
  */
 class Encargados extends \yii\db\ActiveRecord
 {
+
+    public $archivo;
+
     /**
      * {@inheritdoc}
      */
@@ -35,10 +41,11 @@ class Encargados extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['archivo'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'],
             [['nombre', 'cargo'], 'required'],
             [['fecha_creacion', 'fecha_modificacion'], 'safe'],
             [['nombre'], 'string', 'max' => 150],
-            [['cargo', 'ruta_firma'], 'string', 'max' => 100],
+            [['cargo','ruta_firma'], 'string', 'max' => 100],
             [['estatus_registro'], 'string', 'max' => 3],
             [['creado_por', 'modificado_por'], 'string', 'max' => 50],
             [['id'], 'unique'],
@@ -54,7 +61,7 @@ class Encargados extends \yii\db\ActiveRecord
             // 'id' => 'ID',
             'nombre' => 'Nombre',
             'cargo' => 'Cargo',
-            'ruta_firma' => 'Ruta Firma',
+            'archivo' => 'Ruta Firma',
             // 'estatus_registro' => 'Estatus Registro',
             // 'creado_por' => 'Creado Por',
             // 'fecha_creacion' => 'Fecha Creacion',
@@ -72,4 +79,15 @@ class Encargados extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Departamentos::className(), ['id_encargado' => 'id']);
     }
+
+    // public function upload()
+    // {
+    //     if ($this->validate()) {
+    //         $ruta_firma_encargado = Yii::$app->params['FirmasEncargados'];
+    //         $this->imageFile->saveAs($ruta_firma_encargado . $this->imageFile->baseName . '.' . $this->imageFile->extension);
+    //         return true;
+    //     } else {
+    //         return false;
+    //     }
+    // }
 }

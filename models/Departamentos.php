@@ -38,8 +38,8 @@ class Departamentos extends \yii\db\ActiveRecord
     {
         return [
             [['nombre', 'cp', 'direccion'], 'required'],
-            [['id_encargado'], 'default', 'value' => null],
-            [['id_encargado'], 'integer'],
+            // [['id_encargado'], 'default', 'value' => null],
+            // [['id_encargado'], 'integer'],
             [['fecha_creacion', 'fecha_modificacion'], 'safe'],
             [['nombre'], 'string', 'max' => 100],
             [['cp'], 'string', 'max' => 6],
@@ -47,7 +47,7 @@ class Departamentos extends \yii\db\ActiveRecord
             [['estatus_registro'], 'string', 'max' => 3],
             [['creado_por', 'modificado_por'], 'string', 'max' => 50],
             [['id'], 'unique'],
-            [['id_encargado'], 'exist', 'skipOnError' => true, 'targetClass' => Encargados::className(), 'targetAttribute' => ['id_encargado' => 'id']],
+            // [['id_encargado'], 'exist', 'skipOnError' => true, 'targetClass' => Encargados::className(), 'targetAttribute' => ['id_encargado' => 'id']],
         ];
     }
 
@@ -58,7 +58,7 @@ class Departamentos extends \yii\db\ActiveRecord
     {
         return [
             // 'id' => 'ID',
-            'id_encargado' => 'Id Encargado',
+            // 'id_encargado' => 'Id Encargado',
             'nombre' => 'Nombre',
             'cp' => 'C.P.',
             'direccion' => 'Dirección',
@@ -68,16 +68,6 @@ class Departamentos extends \yii\db\ActiveRecord
             // 'modificado_por' => 'Modificado Por',
             // 'fecha_modificacion' => 'Fecha Modificacion',
         ];
-    }
-
-    /**
-     * Gets query for [[Encargado]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getEncargado()
-    {
-        return $this->hasOne(Encargados::className(), ['id' => 'id_encargado']);
     }
 
     /**

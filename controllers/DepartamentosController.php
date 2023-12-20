@@ -105,14 +105,16 @@ class DepartamentosController extends Controller
         
                 ];         
             }else if($model->load($request->post()) && $model->save()){
-                return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Crear Nuevo Departamento",
-                    'content'=>'<span class="text-success">Create Departamentos success</span>',
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Crear Más',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
+                // return [
+                //     'forceReload'=>'#crud-datatable-pjax',
+                //     'title'=> "Crear Nuevo Departamento",
+                //     'content'=>'<span class="text-success">Create Departamentos success</span>',
+                //     'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                //             Html::a('Crear Más',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
         
-                ];         
+                // ];
             }else{           
                 return [
                     'title'=> "Crear Nuevo Departamento",
@@ -166,15 +168,17 @@ class DepartamentosController extends Controller
                                 Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
                 ];         
             }else if($model->load($request->post()) && $model->save()){
-                return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Departamento #".$id,
-                    'content'=>$this->renderAjax('view', [
-                        'model' => $model,
-                    ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Editar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
+                // return [
+                //     'forceReload'=>'#crud-datatable-pjax',
+                //     'title'=> "Departamento #".$id,
+                //     'content'=>$this->renderAjax('view', [
+                //         'model' => $model,
+                //     ]),
+                //     'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                //             Html::a('Editar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                // ];    
             }else{
                  return [
                     'title'=> "Actualizar Departamento #".$id,

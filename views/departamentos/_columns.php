@@ -16,10 +16,6 @@ return [
     // ],
     [
         'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'id_encargado',
-    ],
-    [
-        'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'nombre',
     ],
     [
@@ -30,10 +26,10 @@ return [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'direccion',
     ],
-    [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'estatus_registro',
-    ],
+    // [
+    //     'class'=>'\kartik\grid\DataColumn',
+    //     'attribute'=>'estatus_registro',
+    // ],
     // [
         // 'class'=>'\kartik\grid\DataColumn',
         // 'attribute'=>'creado_por',

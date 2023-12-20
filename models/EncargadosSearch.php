@@ -60,8 +60,8 @@ class EncargadosSearch extends Encargados
         //     'fecha_modificacion' => $this->fecha_modificacion,
         // ]);
 
-        $query->andFilterWhere(['like', 'nombre', $this->nombre])
-            ->andFilterWhere(['like', 'cargo', $this->cargo]);
+        $query->andFilterWhere(['like', 'UPPER(nombre)', strtoupper($this->nombre)])
+            ->andFilterWhere(['like', 'UPPER(cargo)', strtoupper($this->cargo)]);
             // ->andFilterWhere(['like', 'ruta_firma', $this->ruta_firma])
             // ->andFilterWhere(['like', 'estatus_registro', $this->estatus_registro])
             // ->andFilterWhere(['like', 'creado_por', $this->creado_por])

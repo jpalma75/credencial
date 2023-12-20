@@ -5,11 +5,15 @@ namespace app\controllers;
 use Yii;
 use app\models\Encargados;
 use app\models\EncargadosSearch;
+use app\models\UploadForm;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use \yii\web\Response;
+use yii\web\UploadedFile;
 use yii\helpers\Html;
+use app\components\Utilidades;
+use yii\helpers\Url;
 
 /**
  * EncargadosController implements the CRUD actions for Encargados model.
@@ -104,15 +108,17 @@ class EncargadosController extends Controller
                                 Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
         
                 ];         
-            }else if($model->load($request->post()) && $model->save()){
-                return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Crear Nuevo Encargado",
-                    'content'=>'<span class="text-success">Create Encargados success</span>',
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Crear Más',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
+            }else if($model->load($request->post())){
+
+                return $this->subirFirma($model);
+                // return [
+                //     'forceReload'=>'#crud-datatable-pjax',
+                //     'title'=> "Crear Nuevo Encargado",
+                //     'content'=>'<span class="text-success">Create Encargados success</span>',
+                //     'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                //             Html::a('Crear Más',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
         
-                ];         
+                // ];         
             }else{           
                 return [
                     'title'=> "Crear Nuevo Encargado",
@@ -149,7 +155,7 @@ class EncargadosController extends Controller
     public function actionUpdate($id)
     {
         $request = Yii::$app->request;
-        $model = $this->findModel($id);       
+        $model = $this->findModel($id);
 
         if($request->isAjax){
             /*
@@ -165,16 +171,18 @@ class EncargadosController extends Controller
                     'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
                                 Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
                 ];         
-            }else if($model->load($request->post()) && $model->save()){
-                return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Encargado #".$id,
-                    'content'=>$this->renderAjax('view', [
-                        'model' => $model,
-                    ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Editar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
+            }else if($model->load($request->post())){ 
+
+                return $this->subirFirma($model);
+                // return [
+                //     'forceReload'=>'#crud-datatable-pjax',
+                //     'title'=> "Encargado #".$id,
+                //     'content'=>$this->renderAjax('view', [
+                //         'model' => $model,
+                //     ]),
+                //     'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                //             Html::a('Editar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                // ];    
             }else{
                  return [
                     'title'=> "Actualizar Encargado #".$id,
@@ -209,7 +217,19 @@ class EncargadosController extends Controller
     public function actionDelete($id)
     {
         $request = Yii::$app->request;
-        $this->findModel($id)->delete();
+
+        $model = $this->findModel($id);
+
+        $dir = Yii::$app->params['FirmasEncargados'];
+        
+        if ($dir) {
+            $tmp = $model->ruta_firma;
+            if (file_exists($tmp)) {
+                unlink($tmp);                
+            }
+        }
+
+        $model->delete();
 
         if($request->isAjax){
             /*
@@ -241,5 +261,72 @@ class EncargadosController extends Controller
         } else {
             throw new NotFoundHttpException('La página solicitada no existe.');
         }
+    }
+
+    protected function subirFirma(Encargados $model)
+    {
+        $request = Yii::$app->request;
+        $model->archivo= UploadedFile::getInstance($model, 'archivo');
+
+        if($model->validate()){
+
+            if($model->archivo){
+
+                $dir = Yii::$app->params['FirmasEncargados'];
+        
+                if ($dir) {
+                    $tmp = $model->ruta_firma;
+                    if (file_exists($tmp)) {
+                        unlink($tmp);                
+                    }
+                }
+
+                $rutaArchivo = Yii::$app->params['FirmasEncargados'].Utilidades::nombreArchivo().'.'.$model->archivo->extension;
+
+                // $rutaArchivo = 'archivos/firmas/encargados/'.time()."_".$model->archivo->basename.".".$model->archivo->extension;
+
+                if($model->archivo->SaveAs($rutaArchivo)){
+
+                    $model->ruta_firma = $rutaArchivo;
+                }
+            }
+        }
+
+        if($model->save(false)){
+            
+            if($request->isAjax){
+            /*
+            *   Process for ajax request
+            */
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
+            }else{
+                /*
+                *   Process for non-ajax request
+                */
+                return $this->redirect(['index']);
+            }
+
+            // echo json_encode(array('redirect'=>yii\web\Application::createUrl('encargados/index')));
+
+            // return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
+            // echo CJSON::encode(array('status'=>'200', 'redirect'=>Yii::app()->createUrl('/controller/action/')));
+            
+            // $url = Url::to(['index']);
+            // return $url;
+
+            // return $this->redirect(array('index'));
+            // return $this->redirect(['index']);
+
+            // return [
+            //         'forceReload'=>'#crud-datatable-pjax',
+            //         'title'=> "Crear Nuevo Encargado",
+            //         'content'=>'<span class="text-success">Create Encargados success</span>',
+            //         'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+            //                 Html::a('Crear Más',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
+            //         ];
+        }
+
+        
     }
 }

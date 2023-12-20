@@ -13,15 +13,13 @@ use yii\widgets\ActiveForm;
 
     <!-- < ?= $form->field($model, 'id')->textInput() ?> -->
 
-    <?= $form->field($model, 'id_encargado')->textInput() ?>
-
     <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'cp')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'direccion')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'estatus_registro')->textInput(['maxlength' => true]) ?>
+    <!-- < ?= $form->field($model, 'estatus_registro')->textInput(['maxlength' => true]) ?> -->
 
     <!-- < ?= $form->field($model, 'creado_por')->textInput(['maxlength' => true]) ?>
 
