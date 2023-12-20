@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property int $id_departamento
+ * @property int $id_encargado
  * @property int|null $id_empleado_anterior
  * @property string $nombre
  * @property string $ap_paterno
@@ -32,6 +33,7 @@ use Yii;
  * @property Departamentos $departamento
  * @property Empleados $empleadoAnterior
  * @property Empleados[] $empleados
+ * @property Encargados $encargado
  */
 class Empleados extends \yii\db\ActiveRecord
 {
@@ -49,9 +51,9 @@ class Empleados extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_departamento', 'nombre', 'ap_paterno', 'curp', 'num_seguro', 'categoria', 'fecha_inicio_vigencia', 'fecha_termino_vigencia'], 'required'],
-            [['id_departamento', 'id_empleado_anterior'], 'default', 'value' => null],
-            [['id_departamento', 'id_empleado_anterior'], 'integer'],
+            [['id_departamento', 'id_encargado', 'nombre', 'ap_paterno', 'curp', 'num_seguro', 'categoria', 'fecha_inicio_vigencia', 'fecha_termino_vigencia'], 'required'],
+            [['id_departamento', 'id_encargado', 'id_empleado_anterior'], 'default', 'value' => null],
+            [['id_departamento', 'id_encargado', 'id_empleado_anterior'], 'integer'],
             [['fecha_inicio_vigencia', 'fecha_termino_vigencia', 'fecha_creacion', 'fecha_modificacion'], 'safe'],
             [['nombre', 'ap_paterno', 'ap_materno', 'creado_por', 'modificado_por'], 'string', 'max' => 50],
             [['curp'], 'string', 'max' => 19],
@@ -63,6 +65,7 @@ class Empleados extends \yii\db\ActiveRecord
             [['id'], 'unique'],
             [['id_departamento'], 'exist', 'skipOnError' => true, 'targetClass' => Departamentos::className(), 'targetAttribute' => ['id_departamento' => 'id']],
             [['id_empleado_anterior'], 'exist', 'skipOnError' => true, 'targetClass' => Empleados::className(), 'targetAttribute' => ['id_empleado_anterior' => 'id']],
+            [['id_encargado'], 'exist', 'skipOnError' => true, 'targetClass' => Encargados::className(), 'targetAttribute' => ['id_encargado' => 'id']],
         ];
     }
 
@@ -72,12 +75,12 @@ class Empleados extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            // 'id' => 'ID',
             'id_departamento' => 'Departamento',
+            'id_encargado' => 'Encargado',
             'id_empleado_anterior' => 'Empleado Anterior',
             'nombre' => 'Nombre',
-            'ap_paterno' => 'Apellido Paterno',
-            'ap_materno' => 'Apellido Materno',
+            'ap_paterno' => 'Paterno',
+            'ap_materno' => 'Materno',
             'curp' => 'CURP',
             'tipo_sanguineo' => 'Tipo Sanguineo',
             'num_seguro' => 'No. Seguro',
@@ -88,11 +91,11 @@ class Empleados extends \yii\db\ActiveRecord
             'ruta_foto' => 'Ruta Foto',
             'ruta_credencial' => 'Ruta Credencial',
             'tel_emergencia' => 'Tel Emergencia',
-            // 'estatus_registro' => 'Estatus Registro',
-            // 'creado_por' => 'Creado Por',
-            // 'fecha_creacion' => 'Fecha Creacion',
-            // 'modificado_por' => 'Modificado Por',
-            // 'fecha_modificacion' => 'Fecha Modificacion',
+            'estatus_registro' => 'Estatus Registro',
+            'creado_por' => 'Creado Por',
+            'fecha_creacion' => 'Fecha Creacion',
+            'modificado_por' => 'Modificado Por',
+            'fecha_modificacion' => 'Fecha Modificacion',
         ];
     }
 
@@ -124,5 +127,15 @@ class Empleados extends \yii\db\ActiveRecord
     public function getEmpleados()
     {
         return $this->hasMany(Empleados::className(), ['id_empleado_anterior' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Encargado]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEncargado()
+    {
+        return $this->hasOne(Encargados::className(), ['id' => 'id_encargado']);
     }
 }
