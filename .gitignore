@@ -4,6 +4,9 @@ assets/*
 # composer vendor dir
 /vendor
 
+# composer vendor dir
+/web/archivos
+
 # composer itself is not needed
 composer.phar
 
