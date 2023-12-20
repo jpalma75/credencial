@@ -155,5 +155,10 @@ class Utilidades
     }
 
   }
+
+  public static function nombreArchivo()
+    {
+      return date("Ymdhis");
+    }
   
 }
