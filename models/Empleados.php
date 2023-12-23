@@ -1,6 +1,7 @@
 <?php
 
 namespace app\models;
+use yii\web\UploadedFile;
 
 use Yii;
 
@@ -40,6 +41,9 @@ class Empleados extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+
+    public $archivo_firma, $archivo_foto;  // , $archivo_credencial;
+
     public static function tableName()
     {
         return 'empleados';
@@ -51,10 +55,11 @@ class Empleados extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['archivo_firma', 'archivo_foto'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'],            
             [['id_departamento', 'id_encargado', 'nombre', 'ap_paterno', 'curp', 'num_seguro', 'categoria', 'fecha_inicio_vigencia', 'fecha_termino_vigencia'], 'required'],
             [['id_departamento', 'id_encargado', 'id_empleado_anterior'], 'default', 'value' => null],
             [['id_departamento', 'id_encargado', 'id_empleado_anterior'], 'integer'],
-            [['fecha_inicio_vigencia', 'fecha_termino_vigencia', 'fecha_creacion', 'fecha_modificacion'], 'safe'],
+            [['fecha_creacion', 'fecha_modificacion'], 'safe'],
             [['nombre', 'ap_paterno', 'ap_materno', 'creado_por', 'modificado_por'], 'string', 'max' => 50],
             [['curp'], 'string', 'max' => 19],
             [['tipo_sanguineo', 'estatus_registro'], 'string', 'max' => 3],
@@ -76,7 +81,9 @@ class Empleados extends \yii\db\ActiveRecord
     {
         return [
             'id_departamento' => 'Departamento',
+            'departamento_nombre' => 'Departamento',
             'id_encargado' => 'Encargado',
+            'encargado_nombre' => 'Encargado',
             'id_empleado_anterior' => 'Empleado Anterior',
             'nombre' => 'Nombre',
             'ap_paterno' => 'Paterno',
@@ -87,9 +94,12 @@ class Empleados extends \yii\db\ActiveRecord
             'categoria' => 'Categoría',
             'fecha_inicio_vigencia' => 'Inicio Vigencia',
             'fecha_termino_vigencia' => 'Termino Vigencia',
-            'ruta_firma' => 'Ruta Firma',
-            'ruta_foto' => 'Ruta Foto',
-            'ruta_credencial' => 'Ruta Credencial',
+            // 'ruta_firma' => 'Ruta Firma',
+            // 'ruta_foto' => 'Ruta Foto',
+            // 'ruta_credencial' => 'Ruta Credencial',
+            'archivo_firma' => 'Ruta Firma', 
+            'archivo_foto' => 'Ruta Foto', 
+            // 'archivo_credencial' => 'Ruta Credencial',
             'tel_emergencia' => 'Tel Emergencia',
             'estatus_registro' => 'Estatus Registro',
             'creado_por' => 'Creado Por',
@@ -137,5 +147,15 @@ class Empleados extends \yii\db\ActiveRecord
     public function getEncargado()
     {
         return $this->hasOne(Encargados::className(), ['id' => 'id_encargado']);
+    }
+
+    public function getDepartamento_Nombre()
+    {
+        return $this->departamento->nombre;
+    }
+
+    public function getEncargado_Nombre()
+    {
+        return $this->encargado->nombre;
     }
 }

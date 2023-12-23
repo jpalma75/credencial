@@ -10,5 +10,7 @@ use yii\helpers\Html;
 <div class="empleados-create">
     <?= $this->render('_form', [
         'model' => $model,
+        'lstdepartamentos' => $lstdepartamentos,
+        'lstencargados' => $lstencargados,
     ]) ?>
 </div>

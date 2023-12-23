@@ -15,11 +15,13 @@ class EmpleadosSearch extends Empleados
     /**
      * @inheritdoc
      */
+    public $departamento_nombre, $encargado_nombre;
+
     public function rules()
     {
         return [
             [['id_departamento', 'id_encargado', 'id_empleado_anterior'], 'integer'],
-            [['nombre', 'ap_paterno', 'ap_materno', 'curp', 'tipo_sanguineo', 'num_seguro', 'categoria', 'fecha_inicio_vigencia', 'fecha_termino_vigencia', 'ruta_firma', 'ruta_foto', 'ruta_credencial', 'tel_emergencia', 'estatus_registro', 'creado_por', 'fecha_creacion', 'modificado_por', 'fecha_modificacion'], 'safe'],
+            [['nombre', 'ap_paterno', 'ap_materno', 'curp', 'tipo_sanguineo', 'num_seguro', 'categoria', 'fecha_inicio_vigencia', 'fecha_termino_vigencia', 'ruta_firma', 'ruta_foto', 'ruta_credencial', 'tel_emergencia', 'estatus_registro', 'creado_por', 'fecha_creacion', 'modificado_por', 'fecha_modificacion', 'departamento_nombre', 'encargado_nombre'], 'safe'],
         ];
     }
 
@@ -55,30 +57,72 @@ class EmpleadosSearch extends Empleados
             return $dataProvider;
         }
 
+        $query->joinWith(['departamento']);
+        $query->joinWith(['encargado']);
+
+        if(!empty($this->fecha_inicio_vigencia) && strpos($this->fecha_inicio_vigencia, '-') !== false) {
+            list($start_date, $end_date) = explode(' - ', $this->fecha_inicio_vigencia);
+            $query->andFilterWhere(['between', 'empleados.fecha_inicio_vigencia', $start_date, $end_date]);
+        }
+
+        if(!empty($this->fecha_termino_vigencia) && strpos($this->fecha_termino_vigencia, '-') !== false) {
+            list($start_date, $end_date) = explode(' - ', $this->fecha_termino_vigencia);
+            $query->andFilterWhere(['between', 'empleados.fecha_termino_vigencia', $start_date, $end_date]);
+        }       
+
         $query->andFilterWhere([
-            'id_departamento' => $this->id_departamento,
-            'id_encargado' => $this->id_encargado,
+            // 'id_departamento' => $this->id_departamento,
+            // 'id_encargado' => $this->id_encargado,
             'id_empleado_anterior' => $this->id_empleado_anterior,
-            'fecha_inicio_vigencia' => $this->fecha_inicio_vigencia,
-            'fecha_termino_vigencia' => $this->fecha_termino_vigencia,
-            'fecha_creacion' => $this->fecha_creacion,
-            'fecha_modificacion' => $this->fecha_modificacion,
+            'departamentos.nombre' => $this->departamento_nombre,
+            'encargados.nombre' => $this->encargado_nombre,
+            // 'fecha_creacion' => $this->fecha_creacion,
+            // 'fecha_modificacion' => $this->fecha_modificacion,
         ]);
 
-        $query->andFilterWhere(['like', 'nombre', $this->nombre])
-            ->andFilterWhere(['like', 'ap_paterno', $this->ap_paterno])
-            ->andFilterWhere(['like', 'ap_materno', $this->ap_materno])
-            ->andFilterWhere(['like', 'curp', $this->curp])
-            ->andFilterWhere(['like', 'tipo_sanguineo', $this->tipo_sanguineo])
-            ->andFilterWhere(['like', 'num_seguro', $this->num_seguro])
-            ->andFilterWhere(['like', 'categoria', $this->categoria])
-            ->andFilterWhere(['like', 'ruta_firma', $this->ruta_firma])
-            ->andFilterWhere(['like', 'ruta_foto', $this->ruta_foto])
-            ->andFilterWhere(['like', 'ruta_credencial', $this->ruta_credencial])
-            ->andFilterWhere(['like', 'tel_emergencia', $this->tel_emergencia]);
+        // echo '<pre>'; print_r($this->departamento_nombre); echo '</pre>';
+        // echo '<pre>'; print_r($this->encargado_nombre); echo '</pre>';
+        // die();
+
+        $query->andFilterWhere(['like', 'UPPER(empleados.nombre)', strtoupper($this->nombre)])
+            ->andFilterWhere(['like', 'UPPER(ap_paterno)', strtoupper($this->ap_paterno)])
+            ->andFilterWhere(['like', 'UPPER(ap_materno)', strtoupper($this->ap_materno)])
+            ->andFilterWhere(['like', 'UPPER(curp)', strtoupper($this->curp)])
+            ->andFilterWhere(['like', 'UPPER(tipo_sanguineo)', strtoupper($this->tipo_sanguineo)])
+            ->andFilterWhere(['like', 'UPPER(num_seguro)', strtoupper($this->num_seguro)])
+            ->andFilterWhere(['like', 'UPPER(categoria)', strtoupper($this->categoria)])
+            ->andFilterWhere(['like', 'UPPER(empleados.ruta_firma)', strtoupper($this->ruta_firma)])
+            ->andFilterWhere(['like', 'UPPER(ruta_foto)', strtoupper($this->ruta_foto)])
+            // ->andFilterWhere(['like', 'UPPER(ruta_credencial)', strtoupper($this->ruta_credencial)])
+            ->andFilterWhere(['like', 'UPPER(tel_emergencia)', strtoupper($this->tel_emergencia)]);
+            // ->andFilterWhere(['like', 'UPPER(departamentos.nombre)', strtoupper('Secretaría Particular')])
+            // ->andFilterWhere(['like', 'UPPER(encargados.nombre)', strtoupper('Lic. Carlos Enrique Iñiguez Rosique')]);
+            // ->andFilterWhere(['like', 'UPPER(departamentos.nombre)', strtoupper($this->departamento_nombre)])
+            // ->andFilterWhere(['like', 'UPPER(encargados.nombre)', strtoupper($this->encargado_nombre)]);
+
+
+
             // ->andFilterWhere(['like', 'estatus_registro', $this->estatus_registro])
             // ->andFilterWhere(['like', 'creado_por', $this->creado_por])
             // ->andFilterWhere(['like', 'modificado_por', $this->modificado_por]);
+
+        $orden = $dataProvider->getSort()->attributes;
+
+        $orden['departamento_nombre'] = [
+            'asc'  =>["lower(departamentos.nombre)"=>SORT_ASC],
+            'desc' =>["lower(departamentos.nombre)"=>SORT_DESC],
+            'label'=>'Departamento'
+        ];
+
+        $orden['encargado_nombre'] = [
+            'asc'  =>["lower(encargados.nombre)"=>SORT_ASC],
+            'desc' =>["lower(encargados.nombre)"=>SORT_DESC],
+            'label'=>'Encargado'
+        ];
+
+        $dataProvider->setSort([
+            'attributes'=>$orden
+        ]);
 
         return $dataProvider;
     }
