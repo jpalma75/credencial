@@ -23,6 +23,7 @@
         "kartik-v/yii2-grid": "@dev",
         "johnitvn/yii2-ajaxcrud": "*",
         "kartik-v/yii2-widget-select2": "@dev",
+		"kartik-v/yii2-date-range": "dev-master",
         "lisi4ok/yii2-auditlog": "@dev",
         "softark/yii2-dual-listbox": "dev-master",
         "kartik-v/yii2-widget-datepicker": "@dev",
