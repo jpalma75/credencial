@@ -54,9 +54,9 @@ class DepartamentosSearch extends Departamentos
             return $dataProvider;
         }
 
-        $query->andFilterWhere(['like', 'nombre', $this->nombre])
+        $query->andFilterWhere(['like', 'UPPER(nombre)', strtoupper($this->nombre)])
             ->andFilterWhere(['like', 'cp', $this->cp])
-            ->andFilterWhere(['like', 'direccion', $this->direccion]);
+            ->andFilterWhere(['like', 'UPPER(direccion)', strtoupper($this->direccion)]);
             // ->andFilterWhere(['like', 'estatus_registro', $this->estatus_registro])
             // ->andFilterWhere(['like', 'creado_por', $this->creado_por])
             // ->andFilterWhere(['like', 'modificado_por', $this->modificado_por]);
