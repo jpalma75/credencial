@@ -5,11 +5,17 @@ namespace app\controllers;
 use Yii;
 use app\models\Empleados;
 use app\models\EmpleadosSearch;
+use app\models\Departamentos;
+use app\models\Encargados;        
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 use \yii\web\Response;
 use yii\helpers\Html;
+use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
+use app\components\Utilidades;
 
 /**
  * EmpleadosController implements the CRUD actions for Empleados model.
@@ -21,13 +27,18 @@ class EmpleadosController extends Controller
      */
     public function behaviors()
     {
+        // return [
+        //     'verbs' => [
+        //         'class' => VerbFilter::className(),
+        //         'actions' => [
+        //             'delete' => ['post'],
+        //             'bulk-delete' => ['post'],
+        //         ],
+        //     ],
+        // ];
         return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
-                    'bulk-delete' => ['post'],
-                ],
+        'ghost-access'=> [
+            'class' => 'webvimark\modules\UserManagement\components\GhostAccessControl',
             ],
         ];
     }
@@ -41,9 +52,14 @@ class EmpleadosController extends Controller
         $searchModel = new EmpleadosSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $departamentosDesc = ArrayHelper::map(Departamentos::find()->all(),'nombre', 'nombre');
+        $encargadosDesc = ArrayHelper::map(Encargados::find()->all(),'nombre', 'nombre');
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'departamentosDesc' => $departamentosDesc,
+            'encargadosDesc' => $encargadosDesc,
         ]);
     }
 
@@ -63,8 +79,8 @@ class EmpleadosController extends Controller
                     'content'=>$this->renderAjax('view', [
                         'model' => $this->findModel($id),
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                            Html::a('Editar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
                 ];    
         }else{
             return $this->render('view', [
@@ -84,6 +100,9 @@ class EmpleadosController extends Controller
         $request = Yii::$app->request;
         $model = new Empleados();  
 
+        $lstdepartamentos = ArrayHelper::map(Departamentos::find()->where(['estatus_registro' => 'VIG'])->orderBy('nombre')->all(), 'id', 'nombre');
+        $lstencargados = ArrayHelper::map(Encargados::find()->where(['estatus_registro' => 'VIG'])->orderBy('nombre')->all(), 'id', 'nombre');
+
         if($request->isAjax){
             /*
             *   Process for ajax request
@@ -91,31 +110,37 @@ class EmpleadosController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Create new Empleados",
+                    'title'=> "Crear Nuevo Empleado",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
+                        'lstdepartamentos' => $lstdepartamentos,
+                        'lstencargados' => $lstencargados,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
         
                 ];         
-            }else if($model->load($request->post()) && $model->save()){
-                return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Create new Empleados",
-                    'content'=>'<span class="text-success">Create Empleados success</span>',
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Create More',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
+            }else if($model->load($request->post())){
+
+                return $this->subirArchivos($model);
+                // return [
+                //     'forceReload'=>'#crud-datatable-pjax',
+                //     'title'=> "Crear Nuevo Empleado",
+                //     'content'=>'<span class="text-success">Create Empleados success</span>',
+                //     'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                //             Html::a('Create More',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
         
-                ];         
+                // ];  
             }else{           
                 return [
-                    'title'=> "Create new Empleados",
+                    'title'=> "Crear Nuevo Empleado",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
+                        'lstdepartamentos' => $lstdepartamentos,
+                        'lstencargados' => $lstencargados,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
         
                 ];         
             }
@@ -144,7 +169,10 @@ class EmpleadosController extends Controller
     public function actionUpdate($id)
     {
         $request = Yii::$app->request;
-        $model = $this->findModel($id);       
+        $model = $this->findModel($id);  
+
+        $lstdepartamentos = ArrayHelper::map(Departamentos::find()->where(['estatus_registro' => 'VIG'])->orderBy('nombre')->all(), 'id', 'nombre');
+        $lstencargados = ArrayHelper::map(Encargados::find()->where(['estatus_registro' => 'VIG'])->orderBy('nombre')->all(), 'id', 'nombre');     
 
         if($request->isAjax){
             /*
@@ -153,31 +181,38 @@ class EmpleadosController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Update Empleados #".$id,
+                    'title'=> "Actualizar Empleado #".$id,
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
+                        'lstdepartamentos' => $lstdepartamentos,
+                        'lstencargados' => $lstencargados,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
                 ];         
-            }else if($model->load($request->post()) && $model->save()){
-                return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Empleados #".$id,
-                    'content'=>$this->renderAjax('view', [
-                        'model' => $model,
-                    ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
+            }else if($model->load($request->post())){
+
+                return $this->subirArchivos($model);
+
+                // return [
+                //     'forceReload'=>'#crud-datatable-pjax',
+                //     'title'=> "Empleados #".$id,
+                //     'content'=>$this->renderAjax('view', [
+                //         'model' => $model,
+                //     ]),
+                //     'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                //             Html::a('Editar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                // ];
             }else{
                  return [
-                    'title'=> "Update Empleados #".$id,
+                    'title'=> "Actualizar Empleado #".$id,
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
+                        'lstdepartamentos' => $lstdepartamentos,
+                        'lstencargados' => $lstencargados,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
                 ];        
             }
         }else{
@@ -204,7 +239,19 @@ class EmpleadosController extends Controller
     public function actionDelete($id)
     {
         $request = Yii::$app->request;
-        $this->findModel($id)->delete();
+
+        $model = $this->findModel($id);
+
+        $dir = Yii::$app->params['FirmasEmpleados'];
+        
+        if ($dir) {
+            $tmp = $model->ruta_firma;
+            if (file_exists($tmp)) {
+                unlink($tmp);                
+            }
+        }
+
+        $model->delete();
 
         if($request->isAjax){
             /*
@@ -218,40 +265,7 @@ class EmpleadosController extends Controller
             */
             return $this->redirect(['index']);
         }
-
-
-    }
-
-     /**
-     * Delete multiple existing Empleados model.
-     * For ajax request will return json object
-     * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionBulkDelete()
-    {        
-        $request = Yii::$app->request;
-        $pks = explode(',', $request->post( 'pks' )); // Array or selected records primary keys
-        foreach ( $pks as $pk ) {
-            $model = $this->findModel($pk);
-            $model->delete();
-        }
-
-        if($request->isAjax){
-            /*
-            *   Process for ajax request
-            */
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
-            /*
-            *   Process for non-ajax request
-            */
-            return $this->redirect(['index']);
-        }
-       
-    }
+    }    
 
     /**
      * Finds the Empleados model based on its primary key value.
@@ -267,5 +281,74 @@ class EmpleadosController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    protected function subirArchivos(Empleados $model)
+    {
+        $request = Yii::$app->request;
+        $model->archivo_firma = UploadedFile::getInstance($model, 'archivo_firma');
+        $model->archivo_foto = UploadedFile::getInstance($model, 'archivo_foto');
+
+        if($model->validate()){
+
+            if($model->archivo_firma){
+
+                $dir = Yii::$app->params['FirmasEmpleados'];
+        
+                if ($dir) {
+                    $tmp = $model->ruta_firma;
+                    if (file_exists($tmp)) {
+                        unlink($tmp);                
+                    }
+                }
+
+                $rutaArchivo = Yii::$app->params['FirmasEmpleados'].Utilidades::nombreArchivo().'.'.$model->archivo_firma->extension;
+
+                // $rutaArchivo = 'archivos/firmas/encargados/'.time()."_".$model->archivo->basename.".".$model->archivo->extension;
+
+                if($model->archivo_firma->SaveAs($rutaArchivo)){
+
+                    $model->ruta_firma = $rutaArchivo;
+                }
+            }
+
+            if($model->archivo_foto){
+
+                $dir = Yii::$app->params['FotosEmpleados'];
+        
+                if ($dir) {
+                    $tmp = $model->ruta_foto;
+                    if (file_exists($tmp)) {
+                        unlink($tmp);                
+                    }
+                }
+
+                $rutaArchivo = Yii::$app->params['FotosEmpleados'].Utilidades::nombreArchivo().'.'.$model->archivo_foto->extension;
+
+                // $rutaArchivo = 'archivos/firmas/encargados/'.time()."_".$model->archivo->basename.".".$model->archivo->extension;
+
+                if($model->archivo_foto->SaveAs($rutaArchivo)){
+
+                    $model->ruta_foto = $rutaArchivo;
+                }
+            }
+        }
+
+        if($model->save(false)){
+            
+            if($request->isAjax){
+            /*
+            *   Process for ajax request
+            */
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
+            }else{
+                /*
+                *   Process for non-ajax request
+                */
+                return $this->redirect(['index']);
+            }
+        }
+        
     }
 }

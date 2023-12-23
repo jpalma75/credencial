@@ -37,8 +37,8 @@ class EncargadosController extends Controller
         return [
         'ghost-access'=> [
             'class' => 'webvimark\modules\UserManagement\components\GhostAccessControl',
-        ],
-    ];
+            ],
+        ];
     }
 
     /**
@@ -123,7 +123,7 @@ class EncargadosController extends Controller
                 return [
                     'title'=> "Crear Nuevo Encargado",
                     'content'=>$this->renderAjax('create', [
-                        'model' => $model,
+                        'model' => $model,                        
                     ]),
                     'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
                                 Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
@@ -243,8 +243,6 @@ class EncargadosController extends Controller
             */
             return $this->redirect(['index']);
         }
-
-
     }
 
     /**
