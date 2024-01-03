@@ -23,7 +23,8 @@ use Yii;
  * @property string $fecha_termino_vigencia
  * @property string|null $ruta_firma
  * @property string|null $ruta_foto
- * @property string|null $ruta_credencial
+ * @property string|null $ruta_credencial_f
+ * @property string|null $ruta_credencial_v
  * @property string|null $tel_emergencia
  * @property string|null $estatus_registro
  * @property string|null $creado_por
@@ -65,7 +66,7 @@ class Empleados extends \yii\db\ActiveRecord
             [['tipo_sanguineo', 'estatus_registro'], 'string', 'max' => 3],
             [['num_seguro'], 'string', 'max' => 8],
             [['categoria'], 'string', 'max' => 40],
-            [['ruta_firma', 'ruta_foto', 'ruta_credencial'], 'string', 'max' => 100],
+            [['ruta_firma', 'ruta_foto', 'ruta_credencial_f', 'ruta_credencial_v'], 'string', 'max' => 100],
             [['tel_emergencia'], 'string', 'max' => 12],
             [['id'], 'unique'],
             [['id_departamento'], 'exist', 'skipOnError' => true, 'targetClass' => Departamentos::className(), 'targetAttribute' => ['id_departamento' => 'id']],
@@ -96,7 +97,8 @@ class Empleados extends \yii\db\ActiveRecord
             'fecha_termino_vigencia' => 'Termino Vigencia',
             // 'ruta_firma' => 'Ruta Firma',
             // 'ruta_foto' => 'Ruta Foto',
-            // 'ruta_credencial' => 'Ruta Credencial',
+            // 'ruta_credencial_f' => 'Ruta Credencial Frente',
+            // 'ruta_credencial_v' => 'Ruta Credencial Adverso',
             'archivo_firma' => 'Ruta Firma', 
             'archivo_foto' => 'Ruta Foto', 
             // 'archivo_credencial' => 'Ruta Credencial',
@@ -161,6 +163,9 @@ class Empleados extends \yii\db\ActiveRecord
 
     public function getCredencial_Disponible()
     {
+        if(!empty($this->ruta_firma) || !empty($this->ruta_foto)){            
+            return true;
+        }
         return false;
     }
 
