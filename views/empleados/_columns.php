@@ -238,11 +238,19 @@ return [
         //                   'data-confirm-message'=>'Está seguro que desea eliminar el registro'], 
         'buttons' => [
             'print' => function ($url, $model) {
-                        return Html::a('<span class="glyphicon glyphicon-print"></span>', ['imprimir','id' => $model->id], [
-                                        'target'    => '_blank',                          
-                                        'title'     => Yii::t('app', 'lead-print'),
-                                        'data-pjax' => 0
-                        ]);                   
+                $estado = $model->credencial_disponible ? $model->credencial_disponible : false;
+
+                if( $estado ) {
+                    return Html::a('<span class="glyphicon glyphicon-print"></span>', ['imprimir','id' => $model->id], [
+                                    'target'    => '_blank',                          
+                                    'title'     => Yii::t('app', 'lead-print'),
+                                    'data-pjax' => 0
+                            ]);
+                } else {
+                    return '';
+                }
+
+                                           
             },
             'view'  => function($url,$model){
                         return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['view','id' => $model->id], [
