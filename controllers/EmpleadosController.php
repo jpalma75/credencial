@@ -174,11 +174,40 @@ class EmpleadosController extends Controller
         $lstdepartamentos = ArrayHelper::map(Departamentos::find()->where(['estatus_registro' => 'VIG'])->orderBy('nombre')->all(), 'id', 'nombre');
         $lstencargados = ArrayHelper::map(Encargados::find()->where(['estatus_registro' => 'VIG'])->orderBy('nombre')->all(), 'id', 'nombre');     
 
+
+// if($request->isAjax){
+//         echo '<pre>es ajax'; print_r($model); echo '</pre>';
+//             if($request->isGet){
+//         echo '<pre>es get'; print_r($model); echo '</pre>';
+
+//             }else if($model->load($request->post())){
+//         echo '<pre>post'; print_r($model); echo '</pre>';
+
+//              }else{
+//         echo '<pre>ajax no post'; print_r($model); echo '</pre>';
+//         }
+                
+// }else{
+//             /*
+//             *   Process for non-ajax request
+//             */
+//             if ($model->load($request->post()) && $model->save()) {
+//                 return $this->redirect(['view', 'id' => $model->id]);
+//             } else {
+//                 return $this->render('update', [
+//                     'model' => $model,
+//                 ]);
+//             }
+
+// }
+
         if($request->isAjax){
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
+
+
             if($request->isGet){
                 return [
                     'title'=> "Actualizar Empleado #".$id,
@@ -219,11 +248,14 @@ class EmpleadosController extends Controller
             /*
             *   Process for non-ajax request
             */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->load($request->post())) {
+                return $this->subirArchivos($model);
+                // return $this->redirect(['view', 'id' => $model->id]);
             } else {
                 return $this->render('update', [
                     'model' => $model,
+                    'lstdepartamentos' => $lstdepartamentos,
+                    'lstencargados' => $lstencargados,
                 ]);
             }
         }
@@ -291,6 +323,7 @@ class EmpleadosController extends Controller
 
         if($model->validate()){
 
+
             if($model->archivo_firma){
 
                 $dir = Yii::$app->params['FirmasEmpleados'];
@@ -345,8 +378,8 @@ class EmpleadosController extends Controller
             }else{
                 /*
                 *   Process for non-ajax request
-                */
-                return $this->redirect(['index']);
+                */                
+                return $this->redirect(['view', 'id' => $model->id]);
             }
         }
         

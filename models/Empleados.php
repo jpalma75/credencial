@@ -55,7 +55,7 @@ class Empleados extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['archivo_firma', 'archivo_foto'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'],            
+            [['archivo_firma', 'archivo_foto'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg', 'maxSize' => 1024*1024],             
             [['id_departamento', 'id_encargado', 'nombre', 'ap_paterno', 'curp', 'num_seguro', 'categoria', 'fecha_inicio_vigencia', 'fecha_termino_vigencia'], 'required'],
             [['id_departamento', 'id_encargado', 'id_empleado_anterior'], 'default', 'value' => null],
             [['id_departamento', 'id_encargado', 'id_empleado_anterior'], 'integer'],
@@ -158,4 +158,10 @@ class Empleados extends \yii\db\ActiveRecord
     {
         return $this->encargado->nombre;
     }
+
+    public function getCredencial_Disponible()
+    {
+        return false;
+    }
+
 }

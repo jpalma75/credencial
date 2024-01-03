@@ -199,21 +199,69 @@ return [
         // 'class'=>'\kartik\grid\DataColumn',
         // 'attribute'=>'fecha_modificacion',
     // ],
+    // [
+    //     'class' => 'kartik\grid\ActionColumn',
+    //     'dropdown' => false,
+    //     'vAlign'=>'middle',
+    //     'urlCreator' => function($action, $model, $key, $index) { 
+    //             return Url::to([$action,'id'=>$key]);
+    //     },
+    //     'viewOptions'=>['role'=>'modal-remote','title'=>'Ver','data-toggle'=>'tooltip'],
+    //     'updateOptions'=>['role'=>'modal-remote','title'=>'Actualizar', 'data-toggle'=>'tooltip'],
+    //     'deleteOptions'=>['role'=>'modal-remote','title'=>'Borrar', 
+    //                       'data-confirm'=>false, 'data-method'=>false,// for overide yii data api
+    //                       'data-request-method'=>'post',
+    //                       'data-toggle'=>'tooltip',
+    //                       'data-confirm-title'=>'¿Está Seguro?',
+    //                       'data-confirm-message'=>'¿Está Seguro de Querer Eliminar Este Elemento?'], 
+    // ],
+
+
     [
-        'class' => 'kartik\grid\ActionColumn',
-        'dropdown' => false,
-        'vAlign'=>'middle',
+        'class'      => 'kartik\grid\ActionColumn',
+        'dropdown'   => false,
+        'vAlign'     =>'middle',
+        'width'      => '100px',        
+        'template'   => '{print} {view} {update} {delete}',
         'urlCreator' => function($action, $model, $key, $index) { 
-                return Url::to([$action,'id'=>$key]);
+                return Url::to([$action,'id'=>$key, 'fecha_creacion'=>$model->fecha_creacion]);
+                // return Url::to([$action,'id'=>$key]);
         },
-        'viewOptions'=>['role'=>'modal-remote','title'=>'Ver','data-toggle'=>'tooltip'],
-        'updateOptions'=>['role'=>'modal-remote','title'=>'Actualizar', 'data-toggle'=>'tooltip'],
-        'deleteOptions'=>['role'=>'modal-remote','title'=>'Borrar', 
-                          'data-confirm'=>false, 'data-method'=>false,// for overide yii data api
-                          'data-request-method'=>'post',
-                          'data-toggle'=>'tooltip',
-                          'data-confirm-title'=>'¿Está Seguro?',
-                          'data-confirm-message'=>'¿Está Seguro de Querer Eliminar Este Elemento?'], 
+        // 'viewOptions'=>['role'=>'modal-remote','title'=>'Ver','data-toggle'=>'tooltip'],
+        // 'contentOptions' => ['style' => 'width: 120px;', 'class' => 'text-center'],
+        // 'updateOptions'=>['title'=>'Update', 'data-toggle'=>'tooltip'],
+        // 'deleteOptions'=>['role'=>'modal-remote','title'=>'Delete', 
+        //                   'data-confirm'=>false, 'data-method'=>false,// for overide yii data api
+        //                   'data-request-method'=>'post',
+        //                   'data-toggle'=>'tooltip',
+        //                   'data-confirm-title'=>'Está seguro?',
+        //                   'data-confirm-message'=>'Está seguro que desea eliminar el registro'], 
+        'buttons' => [
+            'print' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-print"></span>', ['imprimir','id' => $model->id], [
+                                        'target'    => '_blank',                          
+                                        'title'     => Yii::t('app', 'lead-print'),
+                                        'data-pjax' => 0
+                        ]);                   
+            },
+            'view'  => function($url,$model){
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['view','id' => $model->id], [
+                               'title' => 'Ver', 'data-pjax' => 0 
+                        ]);
+            },
+            'update'  => function($url,$model){
+                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['update','id' => $model->id, 'fecha_creacion'=>$model->fecha_creacion], [
+                               'title' => 'Actualizar', 'data-pjax' => 0 
+                        ]);
+            },
+            'delete'  => function($url,$model){
+                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete','id' => $model->id], [
+                               'title' => 'Eliminar',
+                               'data' => ['confirm' => '¿Estás seguro de que deseas eliminar este elemento?',
+                               'method' => 'post', 'data-pjax' => false],
+                        ]);
+            },
+        ],
     ],
 
 ];   
