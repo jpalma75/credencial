@@ -297,7 +297,30 @@ class EmpleadosController extends Controller
             */
             return $this->redirect(['index']);
         }
-    }    
+    }
+
+
+    public function actionImprimir($id)
+    {
+        $rutaFuente = __DIR__ . "/" . "sansita.ttf";        
+        $nombreImagen = __DIR__ . "/" . "imagen.png";
+        $imagen = imagecreatefrompng($nombreImagen);
+        $color = imagecolorallocate($imagen, 0, 0, 0);
+        $texto1 = "texto1";
+        $texto2 = "texto2";
+        $tamanio = 20;
+        $angulo = 0;
+        $espacio = 10;
+        $x = 400;
+        $y = 50;
+        $x2 = 400;
+        $y2 = $y + $espacio + $tamanio;
+        imagettftext($imagen, $tamanio, $angulo, $x, $y, $color, $rutaFuente, $texto1);
+        imagettftext($imagen, $tamanio, $angulo, $x2, $y2, $color, $rutaFuente, $texto2);
+        header("Content-Type: image/png");
+        imagepng($imagen);
+        imagedestroy($imagen);
+    }
 
     /**
      * Finds the Empleados model based on its primary key value.

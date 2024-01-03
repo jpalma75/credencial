@@ -14,8 +14,9 @@ return [
     'SistemaDescripcion' => 'Sistema que permite dar de alta responsables, departamentos y empleados de los cuales se generará credencial',
 
     //Rutas para los archivos
-    'FirmasEncargados'   => 'archivos/firmas/encargados/' ,
-    'FirmasEmpleados'    => 'archivos/firmas/empleados/' ,
-    'FotosEmpleados'     => 'archivos/fotos/' ,
-    'Credenciales'       => 'archivos/credenciales/' ,
+    'FirmasEncargados'   => 'archivos/firmas/encargados/',
+    'FirmasEmpleados'    => 'archivos/firmas/empleados/',
+    'FotosEmpleados'     => 'archivos/fotos/',
+    'Credenciales'       => 'archivos/credenciales/',
+    'RutaPlantillas'     => 'img/plantillas/',
 ];
