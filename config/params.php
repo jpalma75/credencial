@@ -18,5 +18,7 @@ return [
     'FirmasEmpleados'    => 'archivos/firmas/empleados/',
     'FotosEmpleados'     => 'archivos/fotos/',
     'Credenciales'       => 'archivos/credenciales/',
-    'RutaPlantillas'     => 'img/plantillas/',
+    'RutaPlantillas'     => '\\web\\img\\plantillas\\',
+    'RutaFuentes'        => '\\web\\fonts\\',
+    'Fuente1'            => 'sansita.ttf',
 ];

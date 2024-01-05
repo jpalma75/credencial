@@ -302,9 +302,113 @@ class EmpleadosController extends Controller
 
     public function actionImprimir($id)
     {
-        $rutaFuente = __DIR__ . "/" . "sansita.ttf";        
-        $nombreImagen = __DIR__ . "/" . "imagen.png";
-        $imagen = imagecreatefrompng($nombreImagen);
+        $this->imprimirFrente($id);
+    }
+
+
+    public function imprimirFrente($id)
+    {    
+        $model = $this->findModel($id);
+        $nombre = $model->nombre;
+        $apellidos = $model->ap_paterno . ' ' . $model->ap_materno;
+        $departamento = $model->departamento_nombre;
+        $categoria = $model->categoria;
+        $tipo_contrato = "CONFIANZA";
+        $ruta_foto = $model->ruta_foto;
+        $ruta_firma = $model->ruta_firma;        
+
+        $homedir = dirname(__DIR__, 1);                
+        $fuentes = $homedir . Yii::$app->params['RutaFuentes'] . Yii::$app->params['Fuente1'];
+        // $fuentes = __DIR__ . "/" . "/web/fonts/"" . "sansita.ttf";        
+        $imgPlantilla = $homedir . Yii::$app->params['RutaPlantillas'] . 'CRED GUBERNATURA F.png';
+        // $imgPlantilla = __DIR__ . "/" . "imagen.png";        
+        // $rutaCredenciales = Yii::$app->params['Credenciales'];
+
+        $imgFoto = $homedir . '/web/' . $ruta_foto;
+        // $imgFoto = $homedir . '/web/' . Yii::$app->params['FotosEmpleados'] . 'mary.png';
+        $imgFirma = $homedir . '/web/' . $ruta_firma;
+        // $imgFirma = $homedir . '/web/' . Yii::$app->params['FirmasEmpleados'] . '20231222013355.png';
+        // imagen => C:\repositorio\credencial\controllers/imagen.png
+        // fuentes => C:\repositorio\credencial\controllers/sansita.ttf
+        // $fuentes = Yii::$app->params['Fuentes'] . "sansita.ttf";
+        // $imgPlantilla = $rutaPlantillas . 'CRED GUBERNATURA F.jpg';        
+        // $imagen = imagecreatefrompng($imgPlantilla);
+        // $imagen = imagecreatefromjpeg($imgPlantilla);        
+
+        // Crear instancias de imágenes
+        $plantilla = imagecreatefrompng($imgPlantilla);
+        $foto = imagecreatefrompng($imgFoto);
+        $firma = imagecreatefrompng($imgFirma);
+        $contenedor = imagecreatetruecolor(imagesx($plantilla), imagesy($plantilla));
+         
+        //ver el tamaño de la original
+        // Copiar
+        imagecopy($contenedor, $plantilla, 0, 0, 0, 0, imagesx($plantilla), imagesy($plantilla));
+        imagecopy($contenedor, $foto, 210, 300, 0, 0, imagesx($foto), imagesy($foto));
+        imagecopy($contenedor, $firma, 160, 760, 0, 0, imagesx($firma), imagesy($firma));
+
+        /*
+        imagecopy(
+            GdImage $dst_image,
+            GdImage $src_image,
+            int $dst_x,
+            int $dst_y,
+            int $src_x,
+            int $src_y,
+            int $src_width,
+            int $src_height
+        ): bool
+        */
+
+        $color = imagecolorallocate($contenedor, 0, 0, 0);
+        $texto1 = "texto1";
+        $texto2 = "texto2";
+        $tamanio = 20;
+        $angulo = 0;
+        $espacio = 10;
+        $x = 220;
+        $y = 580;
+        $x2 = 220;
+        $y2 = $y + $espacio + $tamanio;
+        $x3 = 90;
+        $y3 = $y2 + (3 * $espacio) + $tamanio;
+        $x4 = 90;
+        $y4 = $y3 + $espacio + $tamanio;
+        $x5 = 90;
+        $y5 = $y4 + $espacio + $tamanio;
+        imagettftext($contenedor, $tamanio, $angulo, $x, $y, $color, $fuentes, $nombre);
+        imagettftext($contenedor, $tamanio, $angulo, $x2, $y2, $color, $fuentes, $apellidos);
+        imagettftext($contenedor, $tamanio, $angulo, $x3, $y3, $color, $fuentes, $departamento);
+        imagettftext($contenedor, $tamanio, $angulo, $x4, $y4, $color, $fuentes, $categoria);
+        imagettftext($contenedor, $tamanio, $angulo, $x5, $y5, $color, $fuentes, $tipo_contrato);
+
+        // Imprimir y liberar memoria
+        header('Content-Type: image/png');
+        imagepng($contenedor);
+         
+        imagedestroy($destino);
+        imagedestroy($origen);
+        imagedestroy($contenedor);
+    }
+
+
+    public function imprimirAdverso($id)
+    {
+        $homedir = dirname(__DIR__, 1);                
+        $fuentes = $homedir . Yii::$app->params['RutaFuentes'] . Yii::$app->params['Fuente1'];
+        // echo '<pre>'; print_r($fuentes); echo '</pre>';
+        // die();
+        // $fuentes = __DIR__ . "/" . "/web/fonts/"" . "sansita.ttf";        
+        $nombreImagen = $homedir . Yii::$app->params['RutaPlantillas'] . '\CRED GUBERNATURA F.jpg';
+        // $nombreImagen = __DIR__ . "/" . "imagen.png";
+        $rutaPlantillas = Yii::$app->params['Plantillas'];
+        $rutaCredenciales = Yii::$app->params['Credenciales'];
+        // imagen => C:\repositorio\credencial\controllers/imagen.png
+        // fuentes => C:\repositorio\credencial\controllers/sansita.ttf
+        // $fuentes = Yii::$app->params['Fuentes'] . "sansita.ttf";
+        // $nombreImagen = $rutaPlantillas . 'CRED GUBERNATURA F.jpg';        
+        // $imagen = imagecreatefrompng($nombreImagen);
+        $imagen = imagecreatefromjpeg($nombreImagen);        
         $color = imagecolorallocate($imagen, 0, 0, 0);
         $texto1 = "texto1";
         $texto2 = "texto2";
@@ -315,8 +419,8 @@ class EmpleadosController extends Controller
         $y = 50;
         $x2 = 400;
         $y2 = $y + $espacio + $tamanio;
-        imagettftext($imagen, $tamanio, $angulo, $x, $y, $color, $rutaFuente, $texto1);
-        imagettftext($imagen, $tamanio, $angulo, $x2, $y2, $color, $rutaFuente, $texto2);
+        imagettftext($imagen, $tamanio, $angulo, $x, $y, $color, $fuentes, $texto1);
+        imagettftext($imagen, $tamanio, $angulo, $x2, $y2, $color, $fuentes, $texto2);
         header("Content-Type: image/png");
         imagepng($imagen);
         imagedestroy($imagen);
