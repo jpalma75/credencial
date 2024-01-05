@@ -168,7 +168,7 @@ return [
         'format'=>'html',
         'label'=>'Foto',
         'value'=>function($data){
-            return Html::img($data->ruta_foto, ['width' => '60px']);
+            return Html::img($data->ruta_foto, ['width' => '30px']);
         }
     ],
     // [
