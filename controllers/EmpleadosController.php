@@ -307,7 +307,7 @@ class EmpleadosController extends Controller
 
 
     public function imprimirFrente($id)
-    {    
+    {   
         $model = $this->findModel($id);
         $nombre = $model->nombre;
         $apellidos = $model->ap_paterno . ' ' . $model->ap_materno;
@@ -315,11 +315,17 @@ class EmpleadosController extends Controller
         $categoria = $model->categoria;
         $tipo_contrato = "CONFIANZA";
         $ruta_foto = $model->ruta_foto;
-        $ruta_firma = $model->ruta_firma;        
+        $ruta_firma = $model->ruta_firma;
+        $tam_extra_chico = Yii::$app->params['TamExtraChico'];
+        $tam_chico = Yii::$app->params['TamChico'];
+        $tam_mediano = Yii::$app->params['TamMediano'];
+        $tam_grande = Yii::$app->params['TamGrande'];
+        $tam_extra_grande = Yii::$app->params['TamExtraGrande'];
 
         $homedir = dirname(__DIR__, 1);                
-        $fuentes = $homedir . Yii::$app->params['RutaFuentes'] . Yii::$app->params['Fuente1'];
-        // $fuentes = __DIR__ . "/" . "/web/fonts/"" . "sansita.ttf";        
+        $fuente1 = $homedir . Yii::$app->params['RutaFuentes'] . Yii::$app->params['Fuente1'];
+        $fuente2 = $homedir . Yii::$app->params['RutaFuentes'] . Yii::$app->params['Fuente2'];
+        // $fuente1 = __DIR__ . "/" . "/web/fonts/"" . "sansita.ttf";        
         $imgPlantilla = $homedir . Yii::$app->params['RutaPlantillas'] . 'CRED GUBERNATURA F.png';
         // $imgPlantilla = __DIR__ . "/" . "imagen.png";        
         // $rutaCredenciales = Yii::$app->params['Credenciales'];
@@ -330,7 +336,7 @@ class EmpleadosController extends Controller
         // $imgFirma = $homedir . '/web/' . Yii::$app->params['FirmasEmpleados'] . '20231222013355.png';
         // imagen => C:\repositorio\credencial\controllers/imagen.png
         // fuentes => C:\repositorio\credencial\controllers/sansita.ttf
-        // $fuentes = Yii::$app->params['Fuentes'] . "sansita.ttf";
+        // $fuente1 = Yii::$app->params['Fuentes'] . "sansita.ttf";
         // $imgPlantilla = $rutaPlantillas . 'CRED GUBERNATURA F.jpg';        
         // $imagen = imagecreatefrompng($imgPlantilla);
         // $imagen = imagecreatefromjpeg($imgPlantilla);        
@@ -345,7 +351,7 @@ class EmpleadosController extends Controller
         // Copiar
         imagecopy($contenedor, $plantilla, 0, 0, 0, 0, imagesx($plantilla), imagesy($plantilla));
         imagecopy($contenedor, $foto, 210, 300, 0, 0, imagesx($foto), imagesy($foto));
-        imagecopy($contenedor, $firma, 160, 760, 0, 0, imagesx($firma), imagesy($firma));
+        imagecopy($contenedor, $firma, 160, 775, 0, 0, imagesx($firma), imagesy($firma));
 
         /*
         imagecopy(
@@ -360,52 +366,93 @@ class EmpleadosController extends Controller
         ): bool
         */
 
-        $color = imagecolorallocate($contenedor, 0, 0, 0);
-        $texto1 = "texto1";
-        $texto2 = "texto2";
-        $tamanio = 20;
+        $color1 = imagecolorallocate($contenedor, 0, 0, 0);    //Color Negro
+        $color2 = imagecolorallocate($contenedor, 255, 0, 0);  //Color Rojo
         $angulo = 0;
-        $espacio = 10;
-        $x = 220;
+        $espacio = 15;
+        // $x = 220;
+
+        $bbox = imageftbbox($tam_grande, 0, $fuente1, $nombre);
+        $x = $bbox[0] + (imagesx($contenedor) / 2) - ($bbox[4] / 2) - 10;
         $y = 580;
-        $x2 = 220;
-        $y2 = $y + $espacio + $tamanio;
-        $x3 = 90;
-        $y3 = $y2 + (3 * $espacio) + $tamanio;
-        $x4 = 90;
-        $y4 = $y3 + $espacio + $tamanio;
-        $x5 = 90;
-        $y5 = $y4 + $espacio + $tamanio;
-        imagettftext($contenedor, $tamanio, $angulo, $x, $y, $color, $fuentes, $nombre);
-        imagettftext($contenedor, $tamanio, $angulo, $x2, $y2, $color, $fuentes, $apellidos);
-        imagettftext($contenedor, $tamanio, $angulo, $x3, $y3, $color, $fuentes, $departamento);
-        imagettftext($contenedor, $tamanio, $angulo, $x4, $y4, $color, $fuentes, $categoria);
-        imagettftext($contenedor, $tamanio, $angulo, $x5, $y5, $color, $fuentes, $tipo_contrato);
+
+        $bbox = imageftbbox($tam_grande, 0, $fuente1, $apellidos);
+        $x2 = $bbox[0] + (imagesx($contenedor) / 2) - ($bbox[4] / 2) - 10;
+        $y2 = $y + $espacio + $tam_grande;
+        
+        // $x3 = 90;
+        $bbox = imageftbbox($tam_extra_chico, 0, $fuente2, $departamento);
+        $x3 = $bbox[0] + (imagesx($contenedor) / 2) - ($bbox[4] / 2) - 10;
+        $y3 = $y2 + (2 * $espacio) + $tam_grande;
+        
+        // $x4 = 90;
+        $bbox = imageftbbox($tam_extra_chico, 0, $fuente2, $categoria);
+        $x4 = $bbox[0] + (imagesx($contenedor) / 2) - ($bbox[4] / 2) - 10;
+        $y4 = $y3 + $espacio + $tam_extra_chico;
+        
+        // $x5 = 90;
+        $bbox = imageftbbox($tam_mediano, 0, $fuente2, $tipo_contrato);
+        $x5 = $bbox[0] + (imagesx($contenedor) / 2) - ($bbox[4] / 2) - 15;
+        $y5 = $y4 + $espacio + $tam_extra_chico;
+
+        imagettftext($contenedor, $tam_grande, $angulo, $x, $y, $color1, $fuente1, $nombre);
+        imagettftext($contenedor, $tam_grande, $angulo, $x2, $y2, $color1, $fuente1, $apellidos);
+        imagettftext($contenedor, $tam_extra_chico, $angulo, $x3, $y3, $color1, $fuente2, $departamento);
+        imagettftext($contenedor, $tam_extra_chico, $angulo, $x4, $y4, $color1, $fuente2, $categoria);
+        imagettftext($contenedor, $tam_mediano, $angulo, $x5, $y5, $color2, $fuente1, $tipo_contrato);
 
         // Imprimir y liberar memoria
+        /* Version para visualizar en pantalla
         header('Content-Type: image/png');
         imagepng($contenedor);
          
         imagedestroy($destino);
         imagedestroy($origen);
         imagedestroy($contenedor);
+        */
+
+        /* Versión que forza la descarga de la imagen
+        header("Content-Type: image/png");
+        $salida = "imagen_procesada.png";
+        header('Content-Disposition: attachment; filename="' . $salida . '"');
+        imagepng($contenedor);
+        imagedestroy($contenedor);*/
+
+        // Versión para guardar el archivo en servidor
+        header("Content-Type: image/png");
+        $salida = "archivos/credenciales/procesada_1.png";
+        imagepng($contenedor, $salida);
+        imagedestroy($contenedor);
+
+        /*$dir = Yii::$app->params['FirmasEmpleados'];
+        
+                if ($dir) {
+                    $tmp = $model->ruta_firma;
+                    if (file_exists($tmp)) {
+                        unlink($tmp);                
+                    }
+                }
+
+                $rutaArchivo = Yii::$app->params['FirmasEmpleados'].Utilidades::nombreArchivo().'.'.$model->archivo_firma->extension;*/
+
+
     }
 
 
     public function imprimirAdverso($id)
     {
         $homedir = dirname(__DIR__, 1);                
-        $fuentes = $homedir . Yii::$app->params['RutaFuentes'] . Yii::$app->params['Fuente1'];
-        // echo '<pre>'; print_r($fuentes); echo '</pre>';
+        $fuente1 = $homedir . Yii::$app->params['RutaFuentes'] . Yii::$app->params['Fuente1'];
+        // echo '<pre>'; print_r($fuente1); echo '</pre>';
         // die();
-        // $fuentes = __DIR__ . "/" . "/web/fonts/"" . "sansita.ttf";        
+        // $fuente1 = __DIR__ . "/" . "/web/fonts/"" . "sansita.ttf";        
         $nombreImagen = $homedir . Yii::$app->params['RutaPlantillas'] . '\CRED GUBERNATURA F.jpg';
         // $nombreImagen = __DIR__ . "/" . "imagen.png";
         $rutaPlantillas = Yii::$app->params['Plantillas'];
         $rutaCredenciales = Yii::$app->params['Credenciales'];
         // imagen => C:\repositorio\credencial\controllers/imagen.png
         // fuentes => C:\repositorio\credencial\controllers/sansita.ttf
-        // $fuentes = Yii::$app->params['Fuentes'] . "sansita.ttf";
+        // $fuente1 = Yii::$app->params['Fuentes'] . "sansita.ttf";
         // $nombreImagen = $rutaPlantillas . 'CRED GUBERNATURA F.jpg';        
         // $imagen = imagecreatefrompng($nombreImagen);
         $imagen = imagecreatefromjpeg($nombreImagen);        
@@ -419,8 +466,8 @@ class EmpleadosController extends Controller
         $y = 50;
         $x2 = 400;
         $y2 = $y + $espacio + $tamanio;
-        imagettftext($imagen, $tamanio, $angulo, $x, $y, $color, $fuentes, $texto1);
-        imagettftext($imagen, $tamanio, $angulo, $x2, $y2, $color, $fuentes, $texto2);
+        imagettftext($imagen, $tamanio, $angulo, $x, $y, $color, $fuente1, $texto1);
+        imagettftext($imagen, $tamanio, $angulo, $x2, $y2, $color, $fuente1, $texto2);
         header("Content-Type: image/png");
         imagepng($imagen);
         imagedestroy($imagen);
