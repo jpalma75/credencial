@@ -66,7 +66,6 @@ CREATE TABLE empleados (
 	id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
 	id_departamento int4 NOT NULL,
 	id_encargado int4 NOT NULL,
-	id_empleado_anterior int4 NULL,
 	nombre varchar(50) NOT NULL COLLATE "es-MX-x-icu",
 	ap_paterno varchar(50) NOT NULL COLLATE "es-MX-x-icu",
 	ap_materno varchar(50) NULL COLLATE "es-MX-x-icu",
@@ -78,8 +77,6 @@ CREATE TABLE empleados (
 	fecha_termino_vigencia date NOT NULL,
 	ruta_firma varchar(100) NULL,
 	ruta_foto varchar(100) NULL,
-	ruta_credencial_f varchar(100) NULL,
-	ruta_credencial_v varchar(100) NULL,
 	tel_emergencia varchar(12) NULL,
 	estatus_registro varchar(3) NULL DEFAULT 'VIG'::character varying,
 	creado_por varchar(50) NULL DEFAULT CURRENT_USER,
@@ -88,21 +85,76 @@ CREATE TABLE empleados (
 	fecha_modificacion timestamp NULL DEFAULT LOCALTIMESTAMP,
 	CONSTRAINT empleado_pk PRIMARY KEY (id),
 	CONSTRAINT empleados_departamento_fk FOREIGN KEY (id_departamento) REFERENCES departamentos(id) ON DELETE RESTRICT ON UPDATE RESTRICT,
-	CONSTRAINT empleados_empleados_fk FOREIGN KEY (id_empleado_anterior) REFERENCES empleados(id),
 	CONSTRAINT empleados_encargados_fk FOREIGN KEY (id_encargado) REFERENCES encargados(id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
+
+-- Drop TABLE
+
+-- DROP TABLE credenciales;
+CREATE TABLE credenciales (
+	id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
+	id_empleado int4 NOT NULL,
+	anio_inicio int4 NOT NULL,
+	anio_termino int4 NOT NULL,
+	ruta_credencial_f varchar(100) NOT NULL,
+	ruta_credencial_v varchar(100) NULL,
+	estatus_registro varchar(3) NULL DEFAULT 'VIG'::character varying,
+	creado_por varchar(50) NULL DEFAULT CURRENT_USER,
+	fecha_creacion timestamp NULL DEFAULT LOCALTIMESTAMP,
+	modificado_por varchar(50) NULL DEFAULT CURRENT_USER,
+	fecha_modificacion timestamp NULL DEFAULT LOCALTIMESTAMP,
+	CONSTRAINT credenciales_pk PRIMARY KEY (id),
+	CONSTRAINT credenciales_empleados_fk FOREIGN KEY (id_empleado) REFERENCES empleados(id) ON DELETE RESTRICT ON UPDATE RESTRICT
+);
 
 INSERT INTO encargados
 (nombre, cargo, ruta_firma, estatus_registro, creado_por, fecha_creacion, modificado_por, fecha_modificacion)
 VALUES('Lic. Carlos Enrique Iñiguez Rosique', 'Secretario de Administración e Innovación Gubernamental', 'archivos/firmas/encargados/20231220120245.png', 'VIG', 'gu_credencial', '2023-12-19 14:02:17.203', 'gu_credencial', '2023-12-19 14:02:17.203');
 
+INSERT INTO encargados
+(nombre, cargo, ruta_firma, estatus_registro, creado_por, fecha_creacion, modificado_por, fecha_modificacion)
+VALUES('Lic. Jesús Antonio Palma Sánchez', 'Jefe de Departamento Estadística', 'archivos/firmas/encargados/20231220120245.png', 'VIG', 'gu_credencial', '2023-12-19 14:02:17.203', 'gu_credencial', '2023-12-19 14:02:17.203');
 
 /*
-INSERT INTO departamentos
-(nombre, cp, direccion, estatus_registro, creado_por, fecha_creacion, modificado_por, fecha_modificacion, id_encargado)
-VALUES('Secretaría Particular', '86000', 'Palacio de Gobierno, Calle Independencia No.2 Col. Centro', 'VIG', 'gu_credencial', '2023-12-13 12:56:35.579', 'gu_credencial', '2023-12-13 12:56:35.579', NULL);
-INSERT INTO departamentos
-(nombre, cp, direccion, estatus_registro, creado_por, fecha_creacion, modificado_por, fecha_modificacion, id_encargado)
-VALUES('Secretaría Técnica', '86000', 'Palacio de Gobierno, Calle Independencia No.2 Col. Centro', 'VIG', 'gu_credencial', '2023-12-13 12:57:05.899', 'gu_credencial', '2023-12-13 12:57:05.899', NULL);
+INSERT INTO public.departamentos
+(nombre, cp, direccion, estatus_registro, creado_por, fecha_creacion, modificado_por, fecha_modificacion)
+VALUES('Dirección General de Imagen Institucional', '86000', 'Palacio de Gobierno, Calle Independencia No.2 Col. Centro', 'VIG', 'gu_credencial', '2023-12-20 14:14:55.693', 'gu_credencial', '2023-12-20 14:14:55.693');
+INSERT INTO public.departamentos
+(nombre, cp, direccion, estatus_registro, creado_por, fecha_creacion, modificado_por, fecha_modificacion)
+VALUES('Secretaría Privada', '86000', 'Palacio de Gobierno, Calle Independencia No.2 Col. Centro', 'VIG', 'gu_credencial', '2023-12-20 14:15:47.749', 'gu_credencial', '2023-12-20 14:15:47.749');
+INSERT INTO public.departamentos
+(nombre, cp, direccion, estatus_registro, creado_por, fecha_creacion, modificado_por, fecha_modificacion)
+VALUES('Secretaría Particular', '86000', 'Palacio de Gobierno, Calle Independencia No.2 Col. Centro', 'VIG', 'gu_credencial', '2023-12-20 14:15:55.436', 'gu_credencial', '2023-12-20 14:15:55.436');
+INSERT INTO public.departamentos
+(nombre, cp, direccion, estatus_registro, creado_por, fecha_creacion, modificado_por, fecha_modificacion)
+VALUES('Coordinación General Ejecutiva de la Gubernatura', '86000', 'Palacio de Gobierno, Calle Independencia No.2 Col. Centro', 'VIG', 'gu_credencial', '2023-12-20 14:16:27.034', 'gu_credencial', '2023-12-20 14:16:27.034');
+INSERT INTO public.departamentos
+(nombre, cp, direccion, estatus_registro, creado_por, fecha_creacion, modificado_por, fecha_modificacion)
+VALUES('Secretaría Técnica', '86000', 'Palacio de Gobierno, Calle Independencia No.2 Col. Centro', 'VIG', 'gu_credencial', '2023-12-20 14:16:34.174', 'gu_credencial', '2023-12-20 14:16:34.174');
+INSERT INTO public.departamentos
+(nombre, cp, direccion, estatus_registro, creado_por, fecha_creacion, modificado_por, fecha_modificacion)
+VALUES('Secretaría de Asuntos Privados del Sr. Gobernador', '86000', 'Palacio de Gobierno, Calle Independencia No.2 Col. Centro', 'VIG', 'gu_credencial', '2023-12-20 14:17:06.283', 'gu_credencial', '2023-12-20 14:17:06.283');
+INSERT INTO public.departamentos
+(nombre, cp, direccion, estatus_registro, creado_por, fecha_creacion, modificado_por, fecha_modificacion)
+VALUES('Unidad de Atención Ciudadana', '86000', 'Palacio de Gobierno, Calle Independencia No.2 Col. Centro', 'VIG', 'gu_credencial', '2023-12-20 14:17:24.486', 'gu_credencial', '2023-12-20 14:17:24.486');
+INSERT INTO public.departamentos
+(nombre, cp, direccion, estatus_registro, creado_por, fecha_creacion, modificado_por, fecha_modificacion)
+VALUES('Unidad de Giras del Sr. Gobernador', '86000', 'Palacio de Gobierno, Calle Independencia No.2 Col. Centro', 'VIG', 'gu_credencial', '2023-12-20 14:17:43.452', 'gu_credencial', '2023-12-20 14:17:43.452');
+INSERT INTO public.departamentos
+(nombre, cp, direccion, estatus_registro, creado_por, fecha_creacion, modificado_por, fecha_modificacion)
+VALUES('Unidad de Imagen', '86000', 'Palacio de Gobierno, Calle Independencia No.2 Col. Centro', 'VIG', 'gu_credencial', '2023-12-20 14:18:12.616', 'gu_credencial', '2023-12-20 14:18:12.616');
+INSERT INTO public.departamentos
+(nombre, cp, direccion, estatus_registro, creado_por, fecha_creacion, modificado_por, fecha_modificacion)
+VALUES('Unidad de Transparencia', '86000', 'Palacio de Gobierno, Calle Independencia No.2 Col. Centro', 'VIG', 'gu_credencial', '2023-12-20 14:18:30.099', 'gu_credencial', '2023-12-20 14:18:30.099');
+INSERT INTO public.departamentos
+(nombre, cp, direccion, estatus_registro, creado_por, fecha_creacion, modificado_por, fecha_modificacion)
+VALUES('Unidad de Ayudantía', '86000', 'Palacio de Gobierno, Calle Independencia No.2 Col. Centro', 'VIG', 'gu_credencial', '2023-12-20 14:19:02.546', 'gu_credencial', '2023-12-20 14:19:02.546');
+INSERT INTO public.departamentos
+(nombre, cp, direccion, estatus_registro, creado_por, fecha_creacion, modificado_por, fecha_modificacion)
+VALUES('Unidad de Avanzada', '86000', 'Palacio de Gobierno, Calle Independencia No.2 Col. Centro', 'VIG', 'gu_credencial', '2023-12-20 14:19:15.029', 'gu_credencial', '2023-12-20 14:19:15.029');
+INSERT INTO public.departamentos
+(nombre, cp, direccion, estatus_registro, creado_por, fecha_creacion, modificado_por, fecha_modificacion)
+VALUES('Unidad de Soporte Técnico, Informático y de Comunicaciones', '86000', 'Palacio de Gobierno, Calle Independencia No.2 Col. Centro', 'VIG', 'gu_credencial', '2023-12-20 14:19:46.925', 'gu_credencial', '2023-12-20 14:19:46.925');
+
 */
