@@ -2,6 +2,7 @@
 
 namespace app\models;
 use yii\web\UploadedFile;
+use app\models\Credenciales;
 
 use Yii;
 
@@ -23,9 +24,7 @@ use Yii;
  * @property string $fecha_termino_vigencia
  * @property string|null $ruta_firma
  * @property string|null $ruta_foto
- * @property string|null $ruta_credencial_f
- * @property string|null $ruta_credencial_v
- * @property string|null $tel_emergencia
+  * @property string|null $tel_emergencia
  * @property string|null $estatus_registro
  * @property string|null $creado_por
  * @property string|null $fecha_creacion
@@ -43,7 +42,7 @@ class Empleados extends \yii\db\ActiveRecord
      * {@inheritdoc}
      */
 
-    public $archivo_firma, $archivo_foto;  // , $archivo_credencial;
+    public $archivo_firma, $archivo_foto, $ruta_credencial;  // , $archivo_credencial;
 
     public static function tableName()
     {
@@ -60,13 +59,13 @@ class Empleados extends \yii\db\ActiveRecord
             [['id_departamento', 'id_encargado', 'nombre', 'ap_paterno', 'curp', 'num_seguro', 'categoria', 'fecha_inicio_vigencia', 'fecha_termino_vigencia'], 'required'],
             [['id_departamento', 'id_encargado', 'id_empleado_anterior'], 'default', 'value' => null],
             [['id_departamento', 'id_encargado', 'id_empleado_anterior'], 'integer'],
-            [['fecha_creacion', 'fecha_modificacion'], 'safe'],
+            [['fecha_creacion', 'fecha_modificacion', 'ruta_credencial_f'], 'safe'],
             [['nombre', 'ap_paterno', 'ap_materno', 'creado_por', 'modificado_por'], 'string', 'max' => 50],
             [['curp'], 'string', 'max' => 19],
             [['tipo_sanguineo', 'estatus_registro'], 'string', 'max' => 3],
             [['num_seguro'], 'string', 'max' => 8],
             [['categoria'], 'string', 'max' => 40],
-            [['ruta_firma', 'ruta_foto', 'ruta_credencial_f', 'ruta_credencial_v'], 'string', 'max' => 100],
+            [['ruta_firma', 'ruta_foto'], 'string', 'max' => 100],
             [['tel_emergencia'], 'string', 'max' => 12],
             [['id'], 'unique'],
             [['id_departamento'], 'exist', 'skipOnError' => true, 'targetClass' => Departamentos::className(), 'targetAttribute' => ['id_departamento' => 'id']],
@@ -97,8 +96,6 @@ class Empleados extends \yii\db\ActiveRecord
             'fecha_termino_vigencia' => 'Termino Vigencia',
             // 'ruta_firma' => 'Ruta Firma',
             // 'ruta_foto' => 'Ruta Foto',
-            // 'ruta_credencial_f' => 'Ruta Credencial Frente',
-            // 'ruta_credencial_v' => 'Ruta Credencial Adverso',
             'archivo_firma' => 'Ruta Firma', 
             'archivo_foto' => 'Ruta Foto', 
             // 'archivo_credencial' => 'Ruta Credencial',
@@ -121,24 +118,34 @@ class Empleados extends \yii\db\ActiveRecord
         return $this->hasOne(Departamentos::className(), ['id' => 'id_departamento']);
     }
 
-    /**
-     * Gets query for [[EmpleadoAnterior]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getEmpleadoAnterior()
-    {
-        return $this->hasOne(Empleados::className(), ['id' => 'id_empleado_anterior']);
-    }
+    // /**
+    //  * Gets query for [[EmpleadoAnterior]].
+    //  *
+    //  * @return \yii\db\ActiveQuery
+    //  */
+    // public function getEmpleadoAnterior()
+    // {
+    //     return $this->hasOne(Empleados::className(), ['id' => 'id_empleado_anterior']);
+    // }
+
+    // /**
+    //  * Gets query for [[Empleados]].
+    //  *
+    //  * @return \yii\db\ActiveQuery
+    //  */
+    // public function getEmpleados()
+    // {
+    //     return $this->hasMany(Empleados::className(), ['id_empleado_anterior' => 'id']);
+    // }
 
     /**
-     * Gets query for [[Empleados]].
+     * Gets query for [[Empleado]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getEmpleados()
+    public function getCredenciales()
     {
-        return $this->hasMany(Empleados::className(), ['id_empleado_anterior' => 'id']);
+        return $this->hasMany(Credenciales::className(), ['id_empleado' => 'id']);
     }
 
     /**
@@ -167,6 +174,32 @@ class Empleados extends \yii\db\ActiveRecord
             return true;
         }
         return false;
+    }
+
+    public function getRuta_Credencial()
+    {
+        if($this->id != null)
+        {
+            $submodel = Credenciales::find()
+                      ->select([ 'MAX(anio_inicio) as anio_inicio', ])
+                      ->where("id_empleado = " . $this->id)
+                      ->one();
+
+            if(isset($submodel)){
+                if(isset($submodel->anio_inicio)){
+                    $model = Credenciales::find()
+                           ->select([ 'MAX(anio_termino) as anio_termino', ])
+                           ->where("id_empleado = " . $this->id)
+                           ->andWhere("anio_inicio = ".$submodel->anio_inicio)
+                           ->one();
+                }
+            }
+
+            if(isset($model)){
+                return $submodel->anio_inicio . '-' . $model->anio_termino;
+            }
+        }
+        return '';
     }
 
 }

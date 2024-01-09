@@ -20,8 +20,8 @@ class EmpleadosSearch extends Empleados
     public function rules()
     {
         return [
-            [['id_departamento', 'id_encargado', 'id_empleado_anterior'], 'integer'],
-            [['nombre', 'ap_paterno', 'ap_materno', 'curp', 'tipo_sanguineo', 'num_seguro', 'categoria', 'fecha_inicio_vigencia', 'fecha_termino_vigencia', 'ruta_firma', 'ruta_foto', 'ruta_credencial', 'tel_emergencia', 'estatus_registro', 'creado_por', 'fecha_creacion', 'modificado_por', 'fecha_modificacion', 'departamento_nombre', 'encargado_nombre'], 'safe'],
+            [['id_departamento', 'id_encargado'], 'integer'],
+            [['nombre', 'ap_paterno', 'ap_materno', 'curp', 'tipo_sanguineo', 'num_seguro', 'categoria', 'fecha_inicio_vigencia', 'fecha_termino_vigencia', 'ruta_firma', 'ruta_foto', 'tel_emergencia', 'estatus_registro', 'creado_por', 'fecha_creacion', 'modificado_por', 'fecha_modificacion', 'departamento_nombre', 'encargado_nombre'], 'safe'],
         ];
     }
 
@@ -73,7 +73,6 @@ class EmpleadosSearch extends Empleados
         $query->andFilterWhere([
             // 'id_departamento' => $this->id_departamento,
             // 'id_encargado' => $this->id_encargado,
-            'id_empleado_anterior' => $this->id_empleado_anterior,
             'departamentos.nombre' => $this->departamento_nombre,
             'encargados.nombre' => $this->encargado_nombre,
             // 'fecha_creacion' => $this->fecha_creacion,
@@ -93,7 +92,6 @@ class EmpleadosSearch extends Empleados
             ->andFilterWhere(['like', 'UPPER(categoria)', strtoupper($this->categoria)])
             ->andFilterWhere(['like', 'UPPER(empleados.ruta_firma)', strtoupper($this->ruta_firma)])
             ->andFilterWhere(['like', 'UPPER(ruta_foto)', strtoupper($this->ruta_foto)])
-            // ->andFilterWhere(['like', 'UPPER(ruta_credencial)', strtoupper($this->ruta_credencial)])
             ->andFilterWhere(['like', 'UPPER(tel_emergencia)', strtoupper($this->tel_emergencia)]);
             // ->andFilterWhere(['like', 'UPPER(departamentos.nombre)', strtoupper('Secretaría Particular')])
             // ->andFilterWhere(['like', 'UPPER(encargados.nombre)', strtoupper('Lic. Carlos Enrique Iñiguez Rosique')]);

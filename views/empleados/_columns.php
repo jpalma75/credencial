@@ -173,10 +173,6 @@ return [
     ],
     // [
         // 'class'=>'\kartik\grid\DataColumn',
-        // 'attribute'=>'ruta_credencial',
-    // ],
-    // [
-        // 'class'=>'\kartik\grid\DataColumn',
         // 'attribute'=>'tel_emergencia',
     // ],
     // [

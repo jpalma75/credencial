@@ -82,8 +82,6 @@ use kartik\grid\GridView;
 
             <!-- < ?= $form->field($model, 'ruta_foto')->textInput(['maxlength' => true]) ?> -->
 
-            <!-- < ?= $form->field($model, 'ruta_credencial')->textInput(['maxlength' => true]) ?> -->
-
         </div>
 
     <!-- < ?= $form->field($model, 'estatus_registro')->textInput(['maxlength' => true]) ?>

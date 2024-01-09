@@ -13,7 +13,6 @@ use yii\widgets\DetailView;
             'id',
             'id_departamento',
             'id_encargado',
-            // 'id_empleado_anterior',
             'nombre',
             'ap_paterno',
             'ap_materno',
@@ -24,8 +23,13 @@ use yii\widgets\DetailView;
             'fecha_inicio_vigencia',
             'fecha_termino_vigencia',
             'ruta_firma',
-            'ruta_foto',
-            'ruta_credencial',
+            'ruta_foto',            
+            [                                                  // nombre del propietario del modelo
+                'label' => 'Ruta Credencial',
+                'value' => $ruta_credencial,
+                // 'contentOptions' => ['class' => 'bg-red'],     // atributos HTML para personalizar el valor
+                // 'captionOptions' => ['tooltip' => 'Tooltip'],  // atributos HTML para personalizar la etiqueta
+            ],
             'tel_emergencia',
             // 'estatus_registro',
             // 'creado_por',
